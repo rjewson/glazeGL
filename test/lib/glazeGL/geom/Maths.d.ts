@@ -1,0 +1,17 @@
+import { Vector2 } from "./Vector2.js";
+export declare const ZERO_TOLERANCE = 1e-8;
+export declare const RAD_DEG: number;
+export declare const DEG_RAD: number;
+export declare const LN2 = 0.6931471805599453;
+export declare const LN10 = 2.302585092994046;
+export declare const PIHALF = 1.5707963267948966;
+export declare const PI = 3.141592653589793;
+export declare const PI2 = 6.283185307179586;
+export declare const EPS = 0.000001;
+export declare const SQRT2 = 1.414213562373095;
+export declare const MAXINT: number;
+export declare const MININT: number;
+export declare function toRad(deg: number): number;
+export declare function toDeg(rad: number): number;
+export declare function Clamp(value: number, min: number, max: number): number;
+export declare function ScaleRectangleWithRatio(containerRect: Vector2, itemRect: Vector2): number;

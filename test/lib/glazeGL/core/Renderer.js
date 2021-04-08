@@ -159,7 +159,7 @@ export class Renderer {
     drawBuffers(buffers) {
         throw new Error("Method not implemented.");
     }
-    render({ node, target = null, update = true, sort = true, frustumCull = true, clear }) {
+    render({ renderable, target = null, update = true, sort = true, frustumCull = true, clear }) {
         if (target === null) {
             // make sure no render target bound so draws to canvas
             this.bindFramebuffer();
@@ -194,6 +194,6 @@ export class Renderer {
             node.draw({ camera });
         });
 */
-        node.draw();
+        renderable.draw();
     }
 }

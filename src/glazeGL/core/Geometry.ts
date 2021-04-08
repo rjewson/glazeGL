@@ -1,3 +1,5 @@
+import { Renderer } from "./Renderer";
+
 // attribute params
 // {
 //     data - typed array eg UInt16Array for indices, Float32Array
@@ -5,9 +7,6 @@
 //     instanced - default null. Pass divisor amount
 //     type - gl enum default gl.UNSIGNED_SHORT for 'index', gl.FLOAT for others
 //     normalized - boolean default false
-
-import { Renderer } from "./Renderer";
-
 //     buffer - gl buffer, if buffer exists, don't need to provide data
 //     stride - default 0 - for when passing in buffer
 //     offset - default 0 - for when passing in buffer
@@ -21,26 +20,29 @@ import { Renderer } from "./Renderer";
 // TODO: use offset/stride if exists
 
 interface Attribute {
-    id: number,
-    data: any,
-    size: number,
-    instanced: any,
-    type: any,
-    normalized: boolean,
-    divisor: number,
-    buffer: WebGLBuffer,
-    stride: number,
-    offset: number,
-    count: number,
-    min: number,
-    max: number,
-    target: number,
-    needsUpdate?: boolean
+    id: number;
+    data: any;
+    size: number;
+    instanced: any;
+    type: any;
+    normalized: boolean;
+    divisor: number;
+    buffer: WebGLBuffer;
+    stride: number;
+    offset: number;
+    count: number;
+    min: number;
+    max: number;
+    target: number;
+    needsUpdate?: boolean;
 }
 
 interface AttributeMap {
     [name: string]: Attribute;
 }
+
+export const QUAD_POS = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+export const QUAD_UV = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
 
 let ID = 1;
 let ATTR_ID = 1;
@@ -83,7 +85,7 @@ export class Geometry {
         }
     }
 
-    addAttribute(key:string, attr: Attribute) {
+    addAttribute(key: string, attr: Attribute) {
         this.attributes[key] = attr;
 
         // Set options
@@ -96,7 +98,7 @@ export class Geometry {
                 : attr.data.constructor === Uint16Array
                 ? this.gl.UNSIGNED_SHORT
                 : this.gl.UNSIGNED_INT); // Uint32Array
-        attr.target = key === 'index' ? this.gl.ELEMENT_ARRAY_BUFFER : this.gl.ARRAY_BUFFER;
+        attr.target = key === "index" ? this.gl.ELEMENT_ARRAY_BUFFER : this.gl.ARRAY_BUFFER;
         attr.normalized = attr.normalized || false;
         attr.stride = attr.stride || 0;
         attr.offset = attr.offset || 0;
@@ -115,11 +117,11 @@ export class Geometry {
         if (attr.divisor) {
             this.isInstanced = true;
             if (this.instancedCount && this.instancedCount !== attr.count * attr.divisor) {
-                console.warn('geometry has multiple instanced buffers of different length');
+                console.warn("geometry has multiple instanced buffers of different length");
                 return (this.instancedCount = Math.min(this.instancedCount, attr.count * attr.divisor));
             }
             this.instancedCount = attr.count * attr.divisor;
-        } else if (key === 'index') {
+        } else if (key === "index") {
             this.drawRange.count = attr.count;
         } else if (!this.attributes.index) {
             this.drawRange.count = Math.max(this.drawRange.count, attr.count);
@@ -135,8 +137,8 @@ export class Geometry {
         attr.needsUpdate = false;
     }
 
-    setIndex(value) {
-        this.addAttribute('index', value);
+    setIndex(attr: any) {
+        this.addAttribute("index", attr);
     }
 
     setDrawRange(start, count) {
@@ -170,16 +172,23 @@ export class Geometry {
 
             // For matrix attributes, buffer needs to be defined per column
             let numLoc = 1;
-            if (type === WebGLRenderingContext.FLOAT_MAT2 ) numLoc = 2; // mat2
-            if (type === WebGLRenderingContext.FLOAT_MAT3 ) numLoc = 3; // mat3
-            if (type === WebGLRenderingContext.FLOAT_MAT4 ) numLoc = 4; // mat4
+            if (type === WebGLRenderingContext.FLOAT_MAT2) numLoc = 2; // mat2
+            if (type === WebGLRenderingContext.FLOAT_MAT3) numLoc = 3; // mat3
+            if (type === WebGLRenderingContext.FLOAT_MAT4) numLoc = 4; // mat4
 
             const size = attr.size / numLoc;
             const stride = numLoc === 1 ? 0 : numLoc * numLoc * numLoc;
             const offset = numLoc === 1 ? 0 : numLoc * numLoc;
 
             for (let i = 0; i < numLoc; i++) {
-                this.gl.vertexAttribPointer(location + i, size, attr.type, attr.normalized, attr.stride + stride, attr.offset + i * offset);
+                this.gl.vertexAttribPointer(
+                    location + i,
+                    size,
+                    attr.type,
+                    attr.normalized,
+                    attr.stride + stride,
+                    attr.offset + i * offset
+                );
                 this.gl.enableVertexAttribArray(location + i);
 
                 // For instanced attributes, divisor needs to be set.
@@ -187,7 +196,6 @@ export class Geometry {
                 this.renderer.vertexAttribDivisor(location + i, attr.divisor);
             }
         });
-
         // Bind indices if geometry indexed
         if (this.attributes.index) this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.attributes.index.buffer);
     }
@@ -215,11 +223,21 @@ export class Geometry {
                     this.instancedCount
                 );
             } else {
-                this.renderer.drawArraysInstanced(mode, this.drawRange.start, this.drawRange.count, this.instancedCount);
+                this.renderer.drawArraysInstanced(
+                    mode,
+                    this.drawRange.start,
+                    this.drawRange.count,
+                    this.instancedCount
+                );
             }
         } else {
             if (this.attributes.index) {
-                this.gl.drawElements(mode, this.drawRange.count, this.attributes.index.type, this.attributes.index.offset + this.drawRange.start * 2);
+                this.gl.drawElements(
+                    mode,
+                    this.drawRange.count,
+                    this.attributes.index.type,
+                    this.attributes.index.offset + this.drawRange.start * 2
+                );
             } else {
                 this.gl.drawArrays(mode, this.drawRange.start, this.drawRange.count);
             }
@@ -232,7 +250,7 @@ export class Geometry {
         // if (attr.min) return [...attr.min, ...attr.max];
         if (attr.data) return attr.data;
         if (isBoundsWarned) return;
-        console.warn('No position buffer data found to compute bounds');
+        console.warn("No position buffer data found to compute bounds");
         return (isBoundsWarned = true);
     }
 

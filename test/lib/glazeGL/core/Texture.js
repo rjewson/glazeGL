@@ -26,7 +26,7 @@ let ID = 1;
 //     height = width,
 // }
 export class Texture {
-    constructor(renderer, { image = null, target = WebGLRenderingContext.TEXTURE_2D, type = WebGLRenderingContext.UNSIGNED_BYTE, format = WebGLRenderingContext.RGBA, internalFormat = format, wrapS = WebGLRenderingContext.CLAMP_TO_EDGE, wrapT = WebGLRenderingContext.CLAMP_TO_EDGE, generateMipmaps = true, minFilter = generateMipmaps ? WebGLRenderingContext.NEAREST_MIPMAP_LINEAR : WebGLRenderingContext.LINEAR, magFilter = WebGLRenderingContext.LINEAR, premultiplyAlpha = false, unpackAlignment = 4, flipY = target == WebGLRenderingContext.TEXTURE_2D ? true : false, level = 0, width = 0, // used for RenderTargets or Data Textures
+    constructor(renderer, { image = undefined, target = WebGLRenderingContext.TEXTURE_2D, type = WebGLRenderingContext.UNSIGNED_BYTE, format = WebGLRenderingContext.RGBA, internalFormat = format, wrapS = WebGLRenderingContext.CLAMP_TO_EDGE, wrapT = WebGLRenderingContext.CLAMP_TO_EDGE, generateMipmaps = true, minFilter = generateMipmaps ? WebGLRenderingContext.NEAREST_MIPMAP_LINEAR : WebGLRenderingContext.LINEAR, magFilter = WebGLRenderingContext.LINEAR, premultiplyAlpha = false, unpackAlignment = 4, flipY = target == WebGLRenderingContext.TEXTURE_2D ? true : false, level = 0, width = 0, // used for RenderTargets or Data Textures
     height = width, } = {}) {
         this.store = {
             image: null,
@@ -55,12 +55,13 @@ export class Texture {
             image: null,
         };
         // State store to avoid redundant calls for per-texture state
-        this.state = {};
-        this.state.minFilter = this.gl.NEAREST_MIPMAP_LINEAR;
-        this.state.magFilter = this.gl.LINEAR;
-        this.state.wrapS = this.gl.REPEAT;
-        this.state.wrapT = this.gl.REPEAT;
-        this.state.anisotropy = 0;
+        this.state = {
+            minFilter: this.gl.NEAREST_MIPMAP_LINEAR,
+            magFilter: this.gl.LINEAR,
+            wrapS: this.gl.REPEAT,
+            wrapT: this.gl.REPEAT,
+            anisotropy: 0,
+        };
     }
     bind() {
         // Already bound to active texture unit

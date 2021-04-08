@@ -5,7 +5,7 @@ let ID = 1;
 // cache of typed arrays used to flatten uniform arrays
 const arrayCacheF32 = {};
 export class Program {
-    constructor(renderer, { vertex, fragment, uniforms = {}, transparent = false, depthTest = true, depthWrite = true, depthFunc = WebGLRenderingContext.LESS, } = {}) {
+    constructor(renderer, { vertex = undefined, fragment = undefined, uniforms = {}, transparent = false, depthTest = true, depthWrite = true, depthFunc = WebGLRenderingContext.LESS, } = {}) {
         this.renderer = renderer;
         this.gl = this.renderer.gl;
         this.id = ID++;
@@ -157,9 +157,9 @@ export class Program {
                     value.update(textureUnit);
                     textureUnits.push(textureUnit);
                 });
-                return setUniform(this.gl, activeUniform.type, location, textureUnits);
+                return setUniform(this.gl, activeUniform.type, location.location, textureUnits);
             }
-            setUniform(this.gl, activeUniform.type, location, uniform.value);
+            setUniform(this.gl, activeUniform.type, location.location, uniform.value);
         });
         this.applyState();
     }

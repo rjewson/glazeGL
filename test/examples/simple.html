@@ -45,12 +45,12 @@
 
             const geometry = new Quad(renderer);
 
-            const node = new Mesh(renderer, { geometry, program, mode: WebGLRenderingContext.TRIANGLE_STRIP });
+            const renderable = new Mesh(renderer, { geometry, program, mode: WebGLRenderingContext.TRIANGLE_STRIP });
 
             img.onload = () => {
                 texture.image = img;
                 texture.update();
-                renderer.render({ node });
+                renderer.render({ renderable });
             };
         </script>
     </body>

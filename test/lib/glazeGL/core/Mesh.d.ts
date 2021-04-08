@@ -1,7 +1,10 @@
 import { Geometry } from "./Geometry.js";
 import { Program } from "./Program.js";
 import { Renderer } from "./Renderer.js";
-export declare class Mesh {
+export interface Drawable {
+    draw(): any;
+}
+export declare class Mesh implements Drawable {
     renderer: Renderer;
     gl: WebGLRenderingContext;
     id: number;
@@ -9,12 +12,10 @@ export declare class Mesh {
     program: Program;
     mode: number;
     frustumCulled: boolean;
-    constructor(renderer: any, { geometry, program, mode, frustumCulled, renderOrder, }?: {
-        geometry?: null | undefined;
-        program?: null | undefined;
+    constructor(renderer: any, { geometry, program, mode }?: {
+        geometry?: undefined;
+        program?: undefined;
         mode?: number | undefined;
-        frustumCulled?: boolean | undefined;
-        renderOrder?: number | undefined;
     });
     draw(): void;
 }

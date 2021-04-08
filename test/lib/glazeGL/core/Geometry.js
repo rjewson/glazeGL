@@ -1,10 +1,5 @@
-// attribute params
-// {
-//     data - typed array eg UInt16Array for indices, Float32Array
-//     size - int default 1
-//     instanced - default null. Pass divisor amount
-//     type - gl enum default gl.UNSIGNED_SHORT for 'index', gl.FLOAT for others
-//     normalized - boolean default false
+export const QUAD_POS = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+export const QUAD_UV = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
 let ID = 1;
 let ATTR_ID = 1;
 // To stop inifinite warnings
@@ -40,7 +35,7 @@ export class Geometry {
                     : attr.data.constructor === Uint16Array
                         ? this.gl.UNSIGNED_SHORT
                         : this.gl.UNSIGNED_INT); // Uint32Array
-        attr.target = key === 'index' ? this.gl.ELEMENT_ARRAY_BUFFER : this.gl.ARRAY_BUFFER;
+        attr.target = key === "index" ? this.gl.ELEMENT_ARRAY_BUFFER : this.gl.ARRAY_BUFFER;
         attr.normalized = attr.normalized || false;
         attr.stride = attr.stride || 0;
         attr.offset = attr.offset || 0;
@@ -56,12 +51,12 @@ export class Geometry {
         if (attr.divisor) {
             this.isInstanced = true;
             if (this.instancedCount && this.instancedCount !== attr.count * attr.divisor) {
-                console.warn('geometry has multiple instanced buffers of different length');
+                console.warn("geometry has multiple instanced buffers of different length");
                 return (this.instancedCount = Math.min(this.instancedCount, attr.count * attr.divisor));
             }
             this.instancedCount = attr.count * attr.divisor;
         }
-        else if (key === 'index') {
+        else if (key === "index") {
             this.drawRange.count = attr.count;
         }
         else if (!this.attributes.index) {
@@ -76,8 +71,8 @@ export class Geometry {
         this.gl.bufferData(attr.target, attr.data, this.gl.STATIC_DRAW);
         attr.needsUpdate = false;
     }
-    setIndex(value) {
-        this.addAttribute('index', value);
+    setIndex(attr) {
+        this.addAttribute("index", attr);
     }
     setDrawRange(start, count) {
         this.drawRange.start = start;
@@ -163,7 +158,7 @@ export class Geometry {
             return attr.data;
         if (isBoundsWarned)
             return;
-        console.warn('No position buffer data found to compute bounds');
+        console.warn("No position buffer data found to compute bounds");
         return (isBoundsWarned = true);
     }
 }

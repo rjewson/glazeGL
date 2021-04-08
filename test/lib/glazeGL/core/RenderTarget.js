@@ -1,7 +1,6 @@
 import { Texture } from "./Texture.js";
 export class RenderTarget {
-    constructor(renderer, { width = renderer.canvas.width, height = renderer.canvas.height, target = WebGLRenderingContext.FRAMEBUFFER, color = 1, // number of color attachments
-    depth = true, stencil = false, depthTexture = false, // note - stencil breaks
+    constructor(renderer, { width = renderer.canvas.width, height = renderer.canvas.height, target = WebGLRenderingContext.FRAMEBUFFER, color = 1, depth = true, stencil = false, depthTexture = false, // note - stencil breaks
     wrapS = WebGLRenderingContext.CLAMP_TO_EDGE, wrapT = WebGLRenderingContext.CLAMP_TO_EDGE, minFilter = WebGLRenderingContext.LINEAR, magFilter = minFilter, type = WebGLRenderingContext.UNSIGNED_BYTE, format = WebGLRenderingContext.RGBA, internalFormat = format, unpackAlignment = undefined, premultiplyAlpha = undefined, } = {}) {
         this.renderer = renderer;
         this.gl = this.renderer.gl;
@@ -31,7 +30,8 @@ export class RenderTarget {
                 generateMipmaps: false,
             }));
             this.textures[i].update();
-            this.gl.framebufferTexture2D(this.target, WebGLRenderingContext.COLOR_ATTACHMENT0 + i, WebGLRenderingContext.TEXTURE_2D, this.textures[i].texture, 0 /* level */);
+            this.gl.framebufferTexture2D(this.target, WebGLRenderingContext.COLOR_ATTACHMENT0 + i, WebGLRenderingContext.TEXTURE_2D, this.textures[i].texture, 0 // level
+            );
             drawBuffers.push(WebGLRenderingContext.COLOR_ATTACHMENT0 + i);
         }
         // For multi-render targets shader access

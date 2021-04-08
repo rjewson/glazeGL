@@ -71,8 +71,8 @@ export declare class Renderer {
     drawArraysInstanced(mode: number, start: any, count: any, instancedCount: number): void;
     drawElementsInstanced(mode: number, count: any, type: any, arg3: number, instancedCount: number): void;
     drawBuffers(buffers: number[]): void;
-    render({ node, target, update, sort, frustumCull, clear }: {
-        node: any;
+    render({ renderable, target, update, sort, frustumCull, clear }: {
+        renderable: any;
         target?: null | undefined;
         update?: boolean | undefined;
         sort?: boolean | undefined;

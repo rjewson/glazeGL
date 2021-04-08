@@ -19,6 +19,8 @@ interface Attribute {
 interface AttributeMap {
     [name: string]: Attribute;
 }
+export declare const QUAD_POS: Float32Array;
+export declare const QUAD_UV: Float32Array;
 export declare class Geometry {
     renderer: Renderer;
     gl: WebGLRenderingContext;
@@ -31,7 +33,7 @@ export declare class Geometry {
     constructor(renderer: any, attributes?: {});
     addAttribute(key: string, attr: Attribute): number | undefined;
     updateAttribute(attr: any): void;
-    setIndex(value: any): void;
+    setIndex(attr: any): void;
     setDrawRange(start: any, count: any): void;
     setInstancedCount(value: any): void;
     createVAO(program: any): void;

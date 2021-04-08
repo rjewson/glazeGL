@@ -4,7 +4,10 @@ import { Renderer } from "./Renderer.js";
 
 let ID = 0;
 
-export class Mesh {
+export interface Drawable {
+    draw();
+}
+export class Mesh implements Drawable {
     renderer: Renderer;
     gl: WebGLRenderingContext;
     id: number;
@@ -14,16 +17,7 @@ export class Mesh {
     mode: number;
     frustumCulled: boolean;
 
-    constructor(
-        renderer,
-        {
-            geometry = null,
-            program = null,
-            mode = WebGLRenderingContext.TRIANGLES,
-            frustumCulled = true,
-            renderOrder = 0,
-        } = {}
-    ) {
+    constructor(renderer, { geometry = undefined, program = undefined, mode = WebGLRenderingContext.TRIANGLES } = {}) {
         this.renderer = renderer;
         this.id = ID++;
         this.geometry = geometry;

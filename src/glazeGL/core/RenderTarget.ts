@@ -26,7 +26,7 @@ export class RenderTarget {
             width = renderer.canvas.width,
             height = renderer.canvas.height,
             target = WebGLRenderingContext.FRAMEBUFFER,
-            color = 1, // number of color attachments
+            color = 1,
             depth = true,
             stencil = false,
             depthTexture = false, // note - stencil breaks
@@ -78,7 +78,7 @@ export class RenderTarget {
                 WebGLRenderingContext.COLOR_ATTACHMENT0 + i,
                 WebGLRenderingContext.TEXTURE_2D,
                 this.textures[i].texture,
-                0 /* level */
+                0 // level
             );
             drawBuffers.push(WebGLRenderingContext.COLOR_ATTACHMENT0 + i);
         }

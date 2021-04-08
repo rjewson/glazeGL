@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <script type="module">
+            import {
+                Renderer,
+                Texture,
+                Geometry,
+                Program,
+                Mesh,
+                RenderTarget,
+                SpriteRenderer,
+                Sprite,
+                SpriteTexture,
+                Rectangle,
+                Camera,
+                Stage
+            } from "/lib/glazeGL/index.js";
+
+            const renderer = new Renderer({ width: 400, height: 400 });
+
+            document.body.appendChild(renderer.canvas);
+
+            const texture = new Texture(renderer, {
+                image: new Uint8Array([191, 25, 54, 255, 96, 18, 54, 255, 96, 18, 54, 255, 37, 13, 53, 255]),
+                width: 2,
+                height: 2,
+                magFilter: 0x2600, //gl.NEAREST,
+            });
+            const camera = new Camera();
+            camera.resize(400,400);
+            const stage = new Stage();
+            const spriteTexture = new SpriteTexture(texture, new Rectangle(0,0,2,2));
+            const sprite = new Sprite();
+            sprite.texture = spriteTexture;
+            sprite.position.x = 200;
+            sprite.position.y = 200;
+            sprite.scale.x = 50;
+            sprite.scale.y = 50;
+            stage.addChild(sprite);
+            const displayList = new SpriteRenderer(renderer);
+            displayList.addStage(stage);
+            displayList.resize(400,400);
+            
+            camera.focus(0,0);
+
+            const draw = () => {
+                renderer.render({ renderable: displayList });
+                sprite.rotation += 0.1;
+                window.requestAnimationFrame(draw);
+            }
+
+            window.requestAnimationFrame(draw);
+        </script>
+    </body>
+</html>

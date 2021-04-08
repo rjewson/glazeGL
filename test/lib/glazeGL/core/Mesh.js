@@ -1,6 +1,6 @@
 let ID = 0;
 export class Mesh {
-    constructor(renderer, { geometry = null, program = null, mode = WebGLRenderingContext.TRIANGLES, frustumCulled = true, renderOrder = 0, } = {}) {
+    constructor(renderer, { geometry = undefined, program = undefined, mode = WebGLRenderingContext.TRIANGLES } = {}) {
         this.renderer = renderer;
         this.id = ID++;
         this.geometry = geometry;

@@ -28,7 +28,7 @@ export declare class Texture {
     };
     constructor(renderer: Renderer, { image, target, type, format, internalFormat, wrapS, wrapT, generateMipmaps, minFilter, magFilter, premultiplyAlpha, unpackAlignment, flipY, level, width, // used for RenderTargets or Data Textures
     height, }?: {
-        image?: null | undefined;
+        image?: undefined;
         target?: number | undefined;
         type?: number | undefined;
         format?: number | undefined;

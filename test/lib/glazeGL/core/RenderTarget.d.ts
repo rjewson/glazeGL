@@ -15,8 +15,7 @@ export declare class RenderTarget {
     depthBuffer: WebGLRenderbuffer;
     stencilBuffer: WebGLRenderbuffer;
     depthStencilBuffer: WebGLRenderbuffer;
-    constructor(renderer: any, { width, height, target, color, // number of color attachments
-    depth, stencil, depthTexture, // note - stencil breaks
+    constructor(renderer: any, { width, height, target, color, depth, stencil, depthTexture, // note - stencil breaks
     wrapS, wrapT, minFilter, magFilter, type, format, internalFormat, unpackAlignment, premultiplyAlpha, }?: {
         width?: any;
         height?: any;

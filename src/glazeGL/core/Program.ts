@@ -52,8 +52,8 @@ export class Program {
     constructor(
         renderer: Renderer,
         {
-            vertex,
-            fragment,
+            vertex = undefined,
+            fragment = undefined,
             uniforms = {},
             transparent = false,
             depthTest = true,
@@ -236,10 +236,10 @@ export class Program {
                     textureUnits.push(textureUnit);
                 });
 
-                return setUniform(this.gl, activeUniform.type, location, textureUnits);
+                return setUniform(this.gl, activeUniform.type, location.location, textureUnits);
             }
 
-            setUniform(this.gl, activeUniform.type, location, uniform.value);
+            setUniform(this.gl, activeUniform.type, location.location, uniform.value);
         });
 
         this.applyState();

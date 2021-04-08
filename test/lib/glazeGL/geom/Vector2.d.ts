@@ -1,0 +1,33 @@
+export declare class Vector2 {
+    static ZERO_TOLERANCE: number;
+    x: number;
+    y: number;
+    constructor(x?: number, y?: number);
+    setTo(x: number, y: number): void;
+    copy(v: Vector2): void;
+    clone(): Vector2;
+    normalize(): number;
+    length(): number;
+    lengthSqrd(): number;
+    clampScalar(max: number): void;
+    clampVector(v: Vector2): void;
+    plusEquals(v: Vector2): void;
+    minusEquals(v: Vector2): void;
+    multEquals(s: number): void;
+    plusMultEquals(v: Vector2, s: number): void;
+    minusMultEquals(v: Vector2, s: number): void;
+    dot(v: Vector2): number;
+    cross(v: Vector2): number;
+    leftHandNormal(): Vector2;
+    leftHandNormalEquals(): void;
+    rightHandNormal(): Vector2;
+    rightHandNormalEquals(): void;
+    reflectEquals(normal: Vector2): void;
+    interpolate(v1: Vector2, v2: Vector2, t: number): void;
+    setAngle(angle: number): void;
+    rotateEquals(angle: number): void;
+    setUnitRotation(angle: number): void;
+    heading(): number;
+    distSqrd(v: Vector2): number;
+    roundDown(closest: any): Vector2;
+}

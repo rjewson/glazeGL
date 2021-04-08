@@ -66,7 +66,7 @@ export class Texture {
     constructor(
         renderer: Renderer,
         {
-            image = null,
+            image = undefined,
             target = WebGLRenderingContext.TEXTURE_2D,
             type = WebGLRenderingContext.UNSIGNED_BYTE,
             format = WebGLRenderingContext.RGBA,
@@ -111,12 +111,13 @@ export class Texture {
         };
 
         // State store to avoid redundant calls for per-texture state
-        this.state = {};
-        this.state.minFilter = this.gl.NEAREST_MIPMAP_LINEAR;
-        this.state.magFilter = this.gl.LINEAR;
-        this.state.wrapS = this.gl.REPEAT;
-        this.state.wrapT = this.gl.REPEAT;
-        this.state.anisotropy = 0;
+        this.state = {
+            minFilter: this.gl.NEAREST_MIPMAP_LINEAR,
+            magFilter: this.gl.LINEAR,
+            wrapS: this.gl.REPEAT,
+            wrapT: this.gl.REPEAT,
+            anisotropy: 0,
+        };
     }
 
     bind() {
@@ -133,8 +134,8 @@ export class Texture {
         if (needsUpdate || this.renderer.state.textureUnits[textureUnit] !== this.id) {
             // set active texture unit to perform texture functions
             this.renderer.activeTexture(textureUnit);
-            this.bind(); 
-        } 
+            this.bind();
+        }
 
         if (!needsUpdate) return;
         this.needsUpdate = false;
