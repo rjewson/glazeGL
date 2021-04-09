@@ -8,7 +8,7 @@ interface Attribute {
     type: any;
     normalized: boolean;
     divisor: number;
-    buffer: WebGLBuffer;
+    buffer: Buffer;
     stride: number;
     offset: number;
     count: number;
@@ -20,9 +20,6 @@ interface Attribute {
 interface AttributeMap {
     [name: string]: Attribute;
 }
-interface BufferMap {
-    [name: string]: Buffer;
-}
 export declare const QUAD_POS: Float32Array;
 export declare const QUAD_UV: Float32Array;
 export declare class Geometry {
@@ -30,14 +27,13 @@ export declare class Geometry {
     gl: WebGLRenderingContext;
     id: number;
     attributes: AttributeMap;
-    buffers: BufferMap;
+    buffers: Map<Buffer, Array<Attribute>>;
     VAOs: any;
     drawRange: any;
     instancedCount: number;
     isInstanced: boolean;
     constructor(renderer: any, attributes?: {});
     addAttribute(key: string, attr: Attribute): number | undefined;
-    updateAttribute(attr: any): void;
     setIndex(attr: any): void;
     setDrawRange(start: any, count: any): void;
     setInstancedCount(value: any): void;

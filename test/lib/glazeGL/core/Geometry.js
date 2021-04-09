@@ -1,3 +1,4 @@
+import { Buffer } from "./Buffer.js";
 export const QUAD_POS = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 export const QUAD_UV = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
 let ID = 1;
@@ -9,6 +10,7 @@ export class Geometry {
         this.renderer = renderer;
         this.gl = this.renderer.gl;
         this.attributes = attributes;
+        this.buffers = new Map();
         this.id = ID++;
         // Store one VAO per program attribute locations order
         this.VAOs = {};
@@ -28,6 +30,25 @@ export class Geometry {
         // Set options
         attr.id = ATTR_ID++; // TODO: currently unused, remove?
         attr.size = attr.size || 1;
+        if (!attr.buffer) {
+            const buffer = new Buffer(this.renderer);
+            buffer.update(attr.data);
+            attr.buffer = buffer;
+            this.buffers.set(buffer, [attr]);
+            //attr.buffer = this.gl.createBuffer();
+            // Push data to buffer
+            //this.updateAttribute(attr);
+        }
+        else {
+            attr.data = attr.buffer.data;
+            const existingBuffer = this.buffers.has(attr.buffer);
+            if (existingBuffer) {
+                this.buffers.get(attr.buffer).push(attr);
+            }
+            else {
+                this.buffers.set(attr.buffer, [attr]);
+            }
+        }
         attr.type =
             attr.type ||
                 (attr.data.constructor === Float32Array
@@ -42,11 +63,6 @@ export class Geometry {
         attr.count = attr.count || (attr.stride ? attr.data.byteLength / attr.stride : attr.data.length / attr.size);
         attr.divisor = attr.instanced || 0;
         attr.needsUpdate = false;
-        if (!attr.buffer) {
-            attr.buffer = this.gl.createBuffer();
-            // Push data to buffer
-            this.updateAttribute(attr);
-        }
         // Update geometry counts. If indexed, ignore regular attributes
         if (attr.divisor) {
             this.isInstanced = true;
@@ -63,14 +79,14 @@ export class Geometry {
             this.drawRange.count = Math.max(this.drawRange.count, attr.count);
         }
     }
-    updateAttribute(attr) {
-        if (this.renderer.state.boundBuffer !== attr.buffer) {
-            this.gl.bindBuffer(attr.target, attr.buffer);
-            this.renderer.state.boundBuffer = attr.buffer;
-        }
-        this.gl.bufferData(attr.target, attr.data, this.gl.STATIC_DRAW);
-        attr.needsUpdate = false;
-    }
+    // updateAttribute(attr) {
+    //     if (this.renderer.state.boundBuffer !== attr.buffer) {
+    //         this.gl.bindBuffer(attr.target, attr.buffer);
+    //         this.renderer.state.boundBuffer = attr.buffer;
+    //     }
+    //     this.gl.bufferData(attr.target, attr.data, this.gl.STATIC_DRAW);
+    //     attr.needsUpdate = false;
+    // }
     setIndex(attr) {
         this.addAttribute("index", attr);
     }
@@ -95,7 +111,7 @@ export class Geometry {
                 return;
             }
             const attr = this.attributes[name];
-            this.gl.bindBuffer(attr.target, attr.buffer);
+            this.gl.bindBuffer(attr.target, attr.buffer.glBuffer);
             this.renderer.state.boundBuffer = attr.buffer;
             // For matrix attributes, buffer needs to be defined per column
             let numLoc = 1;
@@ -118,7 +134,7 @@ export class Geometry {
         });
         // Bind indices if geometry indexed
         if (this.attributes.index)
-            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.attributes.index.buffer);
+            this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.attributes.index.buffer.glBuffer);
     }
     draw({ program, mode = this.gl.TRIANGLES }) {
         if (this.renderer.currentGeometry !== `${this.id}_${program.attributeOrder}`) {
@@ -128,11 +144,16 @@ export class Geometry {
             this.renderer.currentGeometry = `${this.id}_${program.attributeOrder}`;
         }
         // Check if any attributes need updating
-        program.attributeLocations.forEach((location, { name }) => {
-            const attr = this.attributes[name];
-            if (attr.needsUpdate)
-                this.updateAttribute(attr);
-        });
+        // program.attributeLocations.forEach((location, { name }) => {
+        //     const attr = this.attributes[name];
+        //     if (attr.needsUpdate) this.updateAttribute(attr);
+        // });
+        for (const entry of this.buffers) {
+            const buffer = entry[0];
+            if (buffer.needsUpdate) {
+                buffer.update();
+            }
+        }
         if (this.isInstanced) {
             if (this.attributes.index) {
                 this.renderer.drawElementsInstanced(mode, this.drawRange.count, this.attributes.index.type, this.attributes.index.offset + this.drawRange.start * 2, this.instancedCount);

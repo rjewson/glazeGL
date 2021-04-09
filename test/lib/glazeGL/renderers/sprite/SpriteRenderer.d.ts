@@ -12,9 +12,7 @@ export declare class SpriteRenderer {
     uniforms: any;
     geometry: Geometry;
     private indexBuffer;
-    private indices;
     private dataBuffer;
-    private data;
     constructor(renderer: any);
     resize(width: number, height: number): void;
     addStage(stage: Stage): void;

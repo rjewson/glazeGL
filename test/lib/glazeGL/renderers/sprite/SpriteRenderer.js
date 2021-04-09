@@ -1,9 +1,11 @@
+import { Buffer } from "../../core/Buffer.js";
 import { Geometry } from "../../core/Geometry.js";
 import { Program } from "../../core/Program.js";
 import { Texture } from "../../core/Texture.js";
 const BUFFER_SIZE = 1000;
 const BYTES_PER_QUAD = 5 * 4;
 export class SpriteRenderer {
+    //private data: Float32Array;
     constructor(renderer) {
         this.renderer = renderer;
         this.gl = renderer.gl;
@@ -13,18 +15,22 @@ export class SpriteRenderer {
             uSampler: { value: new Texture(renderer) },
         };
         this.program = new Program(renderer, { vertex, fragment, uniforms: this.uniforms });
-        this.dataBuffer = this.gl.createBuffer();
-        this.data = new Float32Array(BUFFER_SIZE * BYTES_PER_QUAD);
-        this.gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, this.dataBuffer);
-        this.gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, this.data, WebGLRenderingContext.DYNAMIC_DRAW);
-        this.indexBuffer = this.gl.createBuffer();
-        this.indices = createQuadIndiciesBuffer(BUFFER_SIZE);
-        this.gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        this.gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indices, WebGLRenderingContext.STATIC_DRAW);
+        // this.dataBuffer = this.gl.createBuffer();
+        // this.data = new Float32Array(BUFFER_SIZE * BYTES_PER_QUAD);
+        // this.gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, this.dataBuffer);
+        // this.gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, this.data, WebGLRenderingContext.DYNAMIC_DRAW);
+        this.dataBuffer = new Buffer(this.renderer);
+        this.dataBuffer.update(new Float32Array(BUFFER_SIZE * BYTES_PER_QUAD));
+        // this.indexBuffer = this.gl.createBuffer();
+        // this.indices = createQuadIndiciesBuffer(BUFFER_SIZE);
+        // this.gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        // this.gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indices, WebGLRenderingContext.STATIC_DRAW);
+        this.indexBuffer = new Buffer(this.renderer, WebGLRenderingContext.ELEMENT_ARRAY_BUFFER);
+        this.indexBuffer.update(createQuadIndiciesBuffer(BUFFER_SIZE), WebGLRenderingContext.STATIC_DRAW);
         this.geometry = new Geometry(renderer, {
             aVertexPosition: {
                 buffer: this.dataBuffer,
-                data: this.data,
+                //data: this.data,
                 type: WebGLRenderingContext.FLOAT,
                 size: 2,
                 stride: BYTES_PER_QUAD,
@@ -32,7 +38,7 @@ export class SpriteRenderer {
             },
             aTextureCoord: {
                 buffer: this.dataBuffer,
-                data: this.data,
+                //data: this.data,
                 type: WebGLRenderingContext.FLOAT,
                 size: 2,
                 stride: BYTES_PER_QUAD,
@@ -40,7 +46,7 @@ export class SpriteRenderer {
             },
             aColor: {
                 buffer: this.dataBuffer,
-                data: this.data,
+                //data: this.data,
                 type: WebGLRenderingContext.FLOAT,
                 size: 1,
                 stride: BYTES_PER_QUAD,
@@ -48,7 +54,11 @@ export class SpriteRenderer {
                 count: 6
             },
         });
-        this.geometry.setIndex({ buffer: this.indexBuffer, data: this.indices, type: WebGLRenderingContext.UNSIGNED_SHORT });
+        this.geometry.setIndex({
+            buffer: this.indexBuffer,
+            //data: this.indices,
+            type: WebGLRenderingContext.UNSIGNED_SHORT
+        });
     }
     resize(width, height) {
         this.uniforms.projectionVector.value[0] = width / 2;
@@ -99,7 +109,8 @@ export class SpriteRenderer {
         if (!texture)
             return;
         this.uniforms.uSampler.value = texture;
-        this.geometry.attributes["aVertexPosition"].needsUpdate = true;
+        //this.geometry.attributes["aVertexPosition"].needsUpdate = true;
+        this.dataBuffer.needsUpdate = true;
         this.program.use();
         this.geometry.setDrawRange(0, size * 6);
         this.geometry.draw({ program: this.program });
@@ -107,42 +118,43 @@ export class SpriteRenderer {
     AddSpriteToBatch(sprite, indexRun) {
         const index = indexRun * BYTES_PER_QUAD;
         const uvs = sprite.texture.uvs;
+        const data = this.dataBuffer.data;
         //0
         //Verts
-        this.data[index + 0] = sprite.transformedVerts[0];
-        this.data[index + 1] = sprite.transformedVerts[1];
+        data[index + 0] = sprite.transformedVerts[0];
+        data[index + 1] = sprite.transformedVerts[1];
         //UV
-        this.data[index + 2] = uvs[0]; //frame.x / tw;
-        this.data[index + 3] = uvs[1]; //frame.y / th;
+        data[index + 2] = uvs[0]; //frame.x / tw;
+        data[index + 3] = uvs[1]; //frame.y / th;
         //Colour
-        this.data[index + 4] = sprite.worldAlpha;
+        data[index + 4] = sprite.worldAlpha;
         //1
         //Verts
-        this.data[index + 5] = sprite.transformedVerts[2];
-        this.data[index + 6] = sprite.transformedVerts[3];
+        data[index + 5] = sprite.transformedVerts[2];
+        data[index + 6] = sprite.transformedVerts[3];
         //UV
-        this.data[index + 7] = uvs[2]; //(frame.x + frame.width) / tw;
-        this.data[index + 8] = uvs[3]; //frame.y / th;
+        data[index + 7] = uvs[2]; //(frame.x + frame.width) / tw;
+        data[index + 8] = uvs[3]; //frame.y / th;
         //Colour
-        this.data[index + 9] = sprite.worldAlpha;
+        data[index + 9] = sprite.worldAlpha;
         //2
         //Verts
-        this.data[index + 10] = sprite.transformedVerts[4];
-        this.data[index + 11] = sprite.transformedVerts[5];
+        data[index + 10] = sprite.transformedVerts[4];
+        data[index + 11] = sprite.transformedVerts[5];
         //UV
-        this.data[index + 12] = uvs[4]; //(frame.x + frame.width) / tw;
-        this.data[index + 13] = uvs[5]; //(frame.y + frame.height) / th;
+        data[index + 12] = uvs[4]; //(frame.x + frame.width) / tw;
+        data[index + 13] = uvs[5]; //(frame.y + frame.height) / th;
         //Colour
-        this.data[index + 14] = sprite.worldAlpha;
+        data[index + 14] = sprite.worldAlpha;
         //3
         //Verts
-        this.data[index + 15] = sprite.transformedVerts[6];
-        this.data[index + 16] = sprite.transformedVerts[7];
+        data[index + 15] = sprite.transformedVerts[6];
+        data[index + 16] = sprite.transformedVerts[7];
         //UV
-        this.data[index + 17] = uvs[6]; //frame.x / tw;
-        this.data[index + 18] = uvs[7]; //(frame.y + frame.height) / th;
+        data[index + 17] = uvs[6]; //frame.x / tw;
+        data[index + 18] = uvs[7]; //(frame.y + frame.height) / th;
         //Colour
-        this.data[index + 19] = sprite.worldAlpha;
+        data[index + 19] = sprite.worldAlpha;
     }
 }
 const vertex = `

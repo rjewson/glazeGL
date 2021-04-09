@@ -7,7 +7,7 @@ export declare class Buffer {
     data: any;
     size: number;
     needsUpdate: boolean;
-    constructor(renderer: Renderer, target: number);
+    constructor(renderer: Renderer, target?: number);
     bind(): void;
-    update(data: any, usage: any): void;
+    update(data?: any, usage?: number): void;
 }

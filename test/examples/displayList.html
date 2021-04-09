@@ -32,6 +32,7 @@
             camera.resize(400,400);
             const stage = new Stage();
             const spriteTexture = new SpriteTexture(texture, new Rectangle(0,0,2,2));
+
             const sprite = new Sprite();
             sprite.texture = spriteTexture;
             sprite.position.x = 200;
@@ -39,6 +40,15 @@
             sprite.scale.x = 50;
             sprite.scale.y = 50;
             stage.addChild(sprite);
+
+            const sprite2 = new Sprite();
+            sprite2.texture = spriteTexture;
+            sprite2.position.x = 2;
+            sprite2.position.y = 0;
+            sprite2.scale.x = 1;
+            sprite2.scale.y = 1;
+            sprite.addChild(sprite2);
+
             const displayList = new SpriteRenderer(renderer);
             displayList.addStage(stage);
             displayList.resize(400,400);
@@ -47,7 +57,8 @@
 
             const draw = () => {
                 renderer.render({ renderable: displayList });
-                sprite.rotation += 0.1;
+                sprite.rotation += 0.01;
+                sprite2.rotation += 0.01;
                 window.requestAnimationFrame(draw);
             }
 

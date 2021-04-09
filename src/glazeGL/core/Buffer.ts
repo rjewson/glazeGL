@@ -12,24 +12,35 @@ export class Buffer {
 
     needsUpdate: boolean;
 
-    constructor(renderer: Renderer, target: number) {
+    constructor(renderer: Renderer, target: number = WebGLRenderingContext.ARRAY_BUFFER) {
         this.renderer = renderer;
         this.glBuffer = this.renderer.gl.createBuffer();
-        this.target = target == null ? WebGLRenderingContext.ARRAY_BUFFER : target;
+        this.target = target;
         this.size = -1;
         this.needsUpdate = true;
     }
 
     bind() {
-        this.renderer.gl.bindBuffer(this.target, this.glBuffer);
+        if (this.renderer.state.boundBuffer !== this) {
+            this.renderer.gl.bindBuffer(this.target, this.glBuffer);
+            this.renderer.state.boundBuffer = this;
+        }
     }
 
-    update(data: any, usage) {
-        if (data instanceof Array) {
-            data = new Float32Array(data);
-        }
-        this.usage = usage || WebGLRenderingContext.DYNAMIC_DRAW;
+    update(data: any = undefined, usage: number = WebGLRenderingContext.DYNAMIC_DRAW) {
+        this.usage = usage;
         this.bind();
+        if (!data) {
+            this.renderer.gl.bufferData(this.target, this.data, this.usage);
+            return;
+        }
+
+        if (data instanceof Array) {
+            this.data = new Float32Array(data);
+        } else {
+            this.data = data;
+        }
+
         if (this.size !== data.byteLength) {
             this.renderer.gl.bufferData(this.target, data, usage);
             this.size = data.byteLength;

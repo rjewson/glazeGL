@@ -1,3 +1,5 @@
+import { Buffer } from "./Buffer";
+
 export interface BlendFunc {
     src?: number;
     dst?: number;
@@ -22,7 +24,7 @@ export interface WebGLState {
     viewport: any;
     textureUnits: Array<number>;
     activeTextureUnit: number;
-    boundBuffer: WebGLBuffer;
+    boundBuffer: Buffer;
     uniformLocations: Map<any, any>;
 }
 
