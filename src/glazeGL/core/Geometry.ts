@@ -1,4 +1,5 @@
-import { Renderer } from "./Renderer";
+import { Buffer } from "./Buffer.js";
+import { Renderer } from "./Renderer.js";
 
 // attribute params
 // {
@@ -40,6 +41,9 @@ interface Attribute {
 interface AttributeMap {
     [name: string]: Attribute;
 }
+interface BufferMap {
+    [name: string]: Buffer;
+}
 
 export const QUAD_POS = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 export const QUAD_UV = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
@@ -56,6 +60,8 @@ export class Geometry {
     id: number;
 
     attributes: AttributeMap;
+    buffers: BufferMap;
+
     VAOs: any;
     drawRange: any;
     instancedCount: number;

@@ -1,4 +1,5 @@
-import { Renderer } from "./Renderer";
+import { Buffer } from "./Buffer.js";
+import { Renderer } from "./Renderer.js";
 interface Attribute {
     id: number;
     data: any;
@@ -19,6 +20,9 @@ interface Attribute {
 interface AttributeMap {
     [name: string]: Attribute;
 }
+interface BufferMap {
+    [name: string]: Buffer;
+}
 export declare const QUAD_POS: Float32Array;
 export declare const QUAD_UV: Float32Array;
 export declare class Geometry {
@@ -26,6 +30,7 @@ export declare class Geometry {
     gl: WebGLRenderingContext;
     id: number;
     attributes: AttributeMap;
+    buffers: BufferMap;
     VAOs: any;
     drawRange: any;
     instancedCount: number;
