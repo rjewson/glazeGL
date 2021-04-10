@@ -15,7 +15,7 @@ export class Buffer {
     update(data = undefined, usage = WebGLRenderingContext.DYNAMIC_DRAW) {
         this.usage = usage;
         this.bind();
-        if (!data) {
+        if (!data && this.data) {
             this.renderer.gl.bufferData(this.target, this.data, this.usage);
             return;
         }

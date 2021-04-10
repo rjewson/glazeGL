@@ -1,7 +1,7 @@
 const webglState = {
     blendFunc: { src: WebGLRenderingContext.ONE, dst: WebGLRenderingContext.ZERO },
     blendEquation: { modeRGB: WebGLRenderingContext.FUNC_ADD },
-    depthMask: true,
+    depthMask: false,
     depthFunc: WebGLRenderingContext.LESS,
     premultiplyAlpha: false,
     flipY: false,
@@ -14,13 +14,15 @@ const webglState = {
     uniformLocations: new Map(),
 };
 export class Renderer {
-    constructor({ canvas = document.createElement("canvas"), width = 300, height = 150, dpr = 1, alpha = false, depth = true, stencil = false, antialias = false, premultipliedAlpha = false, preserveDrawingBuffer = false, autoClear = true, webgl = 2, } = {}) {
+    constructor({ canvas = document.createElement("canvas"), width = 300, height = 150, dpr = 1, alpha = false, depth = false, stencil = false, antialias = false, premultipliedAlpha = false, preserveDrawingBuffer = false, autoClear = true, webgl = 2, } = {}) {
         this.canvas = canvas;
         this.width = width;
         this.height = height;
         this.dpr = dpr;
         this.color = true;
-        (this.depth = depth), (this.stencil = stencil), (this.autoClear = autoClear);
+        this.depth = depth;
+        this.stencil = stencil;
+        this.autoClear = autoClear;
         this.isWebgl2 = false;
         this.state = webglState;
         const attributes = {
@@ -54,41 +56,48 @@ export class Renderer {
         this.gl.disable(id);
         this.state[id] = false;
     }
-    setBlendEquation(modeRGB, modeAlpha) {
-        modeRGB = modeRGB || this.gl.FUNC_ADD;
-        if (this.state.blendEquation.modeRGB === modeRGB && this.state.blendEquation.modeAlpha === modeAlpha)
+    setBlendEquation(modeRGB = this.gl.FUNC_ADD, modeAlpha) {
+        if (this.state.blendEquation.modeRGB === modeRGB && this.state.blendEquation.modeAlpha === modeAlpha) {
             return;
+        }
         this.state.blendEquation.modeRGB = modeRGB;
         this.state.blendEquation.modeAlpha = modeAlpha;
-        if (modeAlpha !== undefined)
+        if (modeAlpha !== undefined) {
             this.gl.blendEquationSeparate(modeRGB, modeAlpha);
-        else
+        }
+        else {
             this.gl.blendEquation(modeRGB);
+        }
     }
     setBlendFunc(src, dst, srcAlpha, dstAlpha) {
         if (this.state.blendFunc.src === src &&
             this.state.blendFunc.dst === dst &&
             this.state.blendFunc.srcAlpha === srcAlpha &&
-            this.state.blendFunc.dstAlpha === dstAlpha)
+            this.state.blendFunc.dstAlpha === dstAlpha) {
             return;
+        }
         this.state.blendFunc.src = src;
         this.state.blendFunc.dst = dst;
         this.state.blendFunc.srcAlpha = srcAlpha;
         this.state.blendFunc.dstAlpha = dstAlpha;
-        if (srcAlpha !== undefined)
+        if (srcAlpha !== undefined) {
             this.gl.blendFuncSeparate(src, dst, srcAlpha, dstAlpha);
-        else
+        }
+        else {
             this.gl.blendFunc(src, dst);
+        }
     }
     setDepthFunc(value) {
-        if (this.state.depthFunc === value)
+        if (this.state.depthFunc === value) {
             return;
+        }
         this.state.depthFunc = value;
         this.gl.depthFunc(value);
     }
     setDepthMask(value) {
-        if (this.state.depthMask === value)
+        if (this.state.depthMask === value) {
             return;
+        }
         this.state.depthMask = value;
         this.gl.depthMask(value);
     }
@@ -103,17 +112,19 @@ export class Renderer {
         });
     }
     setViewport(width, height) {
-        if (this.state.viewport.width === width && this.state.viewport.height === height)
+        if (this.state.viewport.width === width && this.state.viewport.height === height) {
             return;
+        }
         this.state.viewport.width = width;
         this.state.viewport.height = height;
         this.gl.viewport(0, 0, width, height);
     }
-    bindFramebuffer(target = this.gl.FRAMEBUFFER, buffer = null) {
-        if (this.state.framebuffer === buffer)
+    bindFramebuffer(target = this.gl.FRAMEBUFFER, frameBuffer = null) {
+        if (this.state.framebuffer === frameBuffer) {
             return;
-        this.state.framebuffer = buffer;
-        this.gl.bindFramebuffer(target, buffer);
+        }
+        this.state.framebuffer = frameBuffer;
+        this.gl.bindFramebuffer(target, frameBuffer);
     }
     activeTexture(value) {
         if (this.state.activeTextureUnit === value)
@@ -159,7 +170,7 @@ export class Renderer {
     drawBuffers(buffers) {
         throw new Error("Method not implemented.");
     }
-    render({ renderable, target = null, update = true, sort = true, frustumCull = true, clear }) {
+    render({ renderable, target = null, clear = true }) {
         if (target === null) {
             // make sure no render target bound so draws to canvas
             this.bindFramebuffer();

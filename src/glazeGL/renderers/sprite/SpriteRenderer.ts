@@ -151,7 +151,7 @@ export class SpriteRenderer {
         this.dataBuffer.needsUpdate = true;
         this.program.use();
         this.geometry.setDrawRange(0,size * 6);
-        this.geometry.draw({ program: this.program });
+        this.geometry.draw(this.program);
     }
 
     public AddSpriteToBatch(sprite: Sprite, indexRun: number) {

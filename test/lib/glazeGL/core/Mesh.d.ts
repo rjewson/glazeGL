@@ -12,7 +12,7 @@ export declare class Mesh implements Drawable {
     program: Program;
     mode: number;
     frustumCulled: boolean;
-    constructor(renderer: any, { geometry, program, mode }?: {
+    constructor(renderer: Renderer, { geometry, program, mode }?: {
         geometry?: undefined;
         program?: undefined;
         mode?: number | undefined;

@@ -9,6 +9,6 @@ export class Mesh {
     }
     draw() {
         this.program.use();
-        this.geometry.draw({ mode: this.mode, program: this.program });
+        this.geometry.draw(this.program, this.mode);
     }
 }

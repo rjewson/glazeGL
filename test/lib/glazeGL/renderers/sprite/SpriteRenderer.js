@@ -113,7 +113,7 @@ export class SpriteRenderer {
         this.dataBuffer.needsUpdate = true;
         this.program.use();
         this.geometry.setDrawRange(0, size * 6);
-        this.geometry.draw({ program: this.program });
+        this.geometry.draw(this.program);
     }
     AddSpriteToBatch(sprite, indexRun) {
         const index = indexRun * BYTES_PER_QUAD;

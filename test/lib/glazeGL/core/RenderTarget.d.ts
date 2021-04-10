@@ -7,7 +7,7 @@ export declare class RenderTarget {
     width: any;
     height: any;
     depth: boolean;
-    buffer: WebGLFramebuffer;
+    frameBuffer: WebGLFramebuffer;
     target: number;
     textures: any[];
     texture: any;

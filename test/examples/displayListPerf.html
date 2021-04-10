@@ -15,10 +15,10 @@
                 SpriteTexture,
                 Rectangle,
                 Camera,
-                Stage
+                Stage,
             } from "/lib/glazeGL/index.js";
 
-            const renderer = new Renderer({ width: 400, height: 400 });
+            const renderer = new Renderer({ width: 1000, height: 1000 });
 
             document.body.appendChild(renderer.canvas);
 
@@ -29,38 +29,37 @@
                 magFilter: 0x2600, //gl.NEAREST,
             });
             const camera = new Camera();
-            camera.resize(400,400);
+            camera.resize(1000, 1000);
             const stage = new Stage();
-            const spriteTexture = new SpriteTexture(texture, new Rectangle(0,0,2,2));
+            const spriteTexture = new SpriteTexture(texture, new Rectangle(0, 0, 2, 2));
 
-            const sprite = new Sprite();
-            sprite.texture = spriteTexture;
-            sprite.position.x = 200;
-            sprite.position.y = 200;
-            sprite.scale.x = 50;
-            sprite.scale.y = 50;
-            stage.addChild(sprite);
+            const count = 20;
 
-            const sprite2 = new Sprite();
-            sprite2.texture = spriteTexture;
-            sprite2.position.x = 2;
-            sprite2.position.y = 2;
-            sprite2.scale.x = 1;
-            sprite2.scale.y = 1;
-            sprite.addChild(sprite2);
+            const sprites = [];
+            for (var x = 0; x < count; x++) {
+                for (var y = 0; y < count; y++) {
+                    const sprite = new Sprite();
+                    sprite.texture = spriteTexture;
+                    sprite.position.x = 10 + (x * 55);
+                    sprite.position.y = 10 + (y * 55);
+                    sprite.scale.x = 15;
+                    sprite.scale.y = 15;
+                    stage.addChild(sprite);
+                    sprites.push(sprite);
+                }
+            }
 
             const displayList = new SpriteRenderer(renderer);
             displayList.addStage(stage);
-            displayList.resize(400,400);
-            
-            camera.focus(0,0);
+            displayList.resize(1000, 1000);
+
+            camera.focus(0, 0);
 
             const draw = () => {
                 renderer.render({ renderable: displayList });
-                sprite.rotation += 0.01;
-                sprite2.rotation += 0.01;
+                sprites.forEach(sprite => sprite.rotation += 0.01);
                 window.requestAnimationFrame(draw);
-            }
+            };
 
             window.requestAnimationFrame(draw);
         </script>

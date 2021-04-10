@@ -17,12 +17,10 @@ export class Camera extends DisplayObjectContainer {
         //Need to move the camera container the oposite way to the actual coords
         this.realPosition.x = x;
         this.realPosition.y = y;
-        // realPosition.plusEquals(shake);
         //Clamp position inside shrunk camera extents
         this.cameraExtentsAABB.fitPoint(this.realPosition);
         var positionx = -this.realPosition.x + this.halfViewportSize.x;
         var positiony = -this.realPosition.y + this.halfViewportSize.y;
-        // position.x = positionx;
         if (Math.abs(positionx - this.position.x) > 2)
             this.position.x = this.position.x + (positionx - this.position.x) * CAMERA_TRACKING_SPEED;
         if (Math.abs(positiony - this.position.y) > 2)

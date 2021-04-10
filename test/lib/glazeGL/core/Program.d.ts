@@ -34,8 +34,8 @@ export declare class Program {
     constructor(renderer: Renderer, { vertex, fragment, uniforms, transparent, depthTest, depthWrite, depthFunc, }?: ProgramParamters);
     setBlendFunc(src: any, dst: any, srcAlpha?: undefined, dstAlpha?: undefined): void;
     setBlendEquation(modeRGB: any, modeAlpha: any): void;
-    applyState(): void;
     use(): void;
+    applyState(): void;
     remove(): void;
 }
 export {};

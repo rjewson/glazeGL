@@ -1,4 +1,5 @@
 import { Buffer } from "./Buffer.js";
+import { Program } from "./Program.js";
 import { Renderer } from "./Renderer.js";
 interface Attribute {
     id: number;
@@ -22,6 +23,7 @@ interface AttributeMap {
 }
 export declare const QUAD_POS: Float32Array;
 export declare const QUAD_UV: Float32Array;
+export declare const INDEX_ATTR = "index";
 export declare class Geometry {
     renderer: Renderer;
     gl: WebGLRenderingContext;
@@ -37,12 +39,9 @@ export declare class Geometry {
     setIndex(attr: any): void;
     setDrawRange(start: any, count: any): void;
     setInstancedCount(value: any): void;
-    createVAO(program: any): void;
-    bindAttributes(program: any): void;
-    draw({ program, mode }: {
-        program: any;
-        mode?: number | undefined;
-    }): void;
+    createVAO(program: Program): void;
+    bindAttributes(program: Program): void;
+    draw(program: Program, mode?: number): void;
     getPositionArray(): any;
 }
 export {};

@@ -110,7 +110,6 @@ export class Texture {
             image: null,
         };
 
-        // State store to avoid redundant calls for per-texture state
         this.state = {
             minFilter: this.gl.NEAREST_MIPMAP_LINEAR,
             magFilter: this.gl.LINEAR,
@@ -122,7 +121,9 @@ export class Texture {
 
     bind() {
         // Already bound to active texture unit
-        if (this.renderer.state.textureUnits[this.renderer.state.activeTextureUnit] === this.id) return;
+        if (this.renderer.state.textureUnits[this.renderer.state.activeTextureUnit] === this.id) {
+            return;
+        }
         this.gl.bindTexture(this.target, this.texture);
         this.renderer.state.textureUnits[this.renderer.state.activeTextureUnit] = this.id;
     }
@@ -137,7 +138,9 @@ export class Texture {
             this.bind();
         }
 
-        if (!needsUpdate) return;
+        if (!needsUpdate) {
+            return;
+        }
         this.needsUpdate = false;
 
         if (this.flipY !== this.renderer.state.flipY) {

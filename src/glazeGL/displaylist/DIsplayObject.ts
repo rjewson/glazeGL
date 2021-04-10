@@ -13,8 +13,6 @@ export class DisplayObject {
     private _visible: boolean;
     public renderable: boolean;
 
-    //public aabb:AABB2;
-
     public parent: DisplayObjectContainer;
 
     public worldTransform: Float32Array;
@@ -33,7 +31,6 @@ export class DisplayObject {
         this.alpha = 1;
         this.visible = true;
         this.renderable = false;
-        // this.aabb = new AABB2();
         this.parent = null;
         this.worldTransform = Create();
         this.localTransform = Create();

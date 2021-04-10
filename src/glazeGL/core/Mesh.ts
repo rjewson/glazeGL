@@ -17,7 +17,7 @@ export class Mesh implements Drawable {
     mode: number;
     frustumCulled: boolean;
 
-    constructor(renderer, { geometry = undefined, program = undefined, mode = WebGLRenderingContext.TRIANGLES } = {}) {
+    constructor(renderer: Renderer, { geometry = undefined, program = undefined, mode = WebGLRenderingContext.TRIANGLES } = {}) {
         this.renderer = renderer;
         this.id = ID++;
         this.geometry = geometry;
@@ -27,6 +27,6 @@ export class Mesh implements Drawable {
 
     draw() {
         this.program.use();
-        this.geometry.draw({ mode: this.mode, program: this.program });
+        this.geometry.draw(this.program, this.mode);
     }
 }

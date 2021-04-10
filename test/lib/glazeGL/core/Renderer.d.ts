@@ -56,13 +56,13 @@ export declare class Renderer {
     });
     enable(id: number): void;
     disable(id: number): void;
-    setBlendEquation(modeRGB: number, modeAlpha: number): void;
+    setBlendEquation(modeRGB: number | undefined, modeAlpha: number): void;
     setBlendFunc(src: number, dst: number, srcAlpha: number, dstAlpha: number): void;
     setDepthFunc(value: number): void;
     setDepthMask(value: boolean): void;
     setSize(width: any, height: any): void;
     setViewport(width: any, height: any): void;
-    bindFramebuffer(target?: number, buffer?: null): void;
+    bindFramebuffer(target?: number, frameBuffer?: null): void;
     activeTexture(value: number): void;
     getExtension(extension: string, webgl2Func?: string, extFunc?: string): any;
     vertexAttribDivisor(arg0: any, divisor: any): void;
@@ -72,12 +72,9 @@ export declare class Renderer {
     drawArraysInstanced(mode: number, start: any, count: any, instancedCount: number): void;
     drawElementsInstanced(mode: number, count: any, type: any, arg3: number, instancedCount: number): void;
     drawBuffers(buffers: number[]): void;
-    render({ renderable, target, update, sort, frustumCull, clear }: {
+    render({ renderable, target, clear }: {
         renderable: any;
         target?: null | undefined;
-        update?: boolean | undefined;
-        sort?: boolean | undefined;
-        frustumCull?: boolean | undefined;
-        clear: any;
+        clear?: boolean | undefined;
     }): void;
 }

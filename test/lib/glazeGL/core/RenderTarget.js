@@ -7,9 +7,9 @@ export class RenderTarget {
         this.width = width;
         this.height = height;
         this.depth = depth;
-        this.buffer = this.gl.createFramebuffer();
+        this.frameBuffer = this.gl.createFramebuffer();
         this.target = target;
-        this.gl.bindFramebuffer(this.target, this.buffer);
+        this.gl.bindFramebuffer(this.target, this.frameBuffer);
         this.textures = [];
         const drawBuffers = [];
         // create and attach required num of color textures

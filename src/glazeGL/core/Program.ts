@@ -165,25 +165,6 @@ export class Program {
         this.blendEquation.modeAlpha = modeAlpha;
     }
 
-    applyState() {
-        if (this.depthTest) this.renderer.enable(this.gl.DEPTH_TEST);
-        else this.renderer.disable(this.gl.DEPTH_TEST);
-
-        if (this.blendFunc.src) this.renderer.enable(this.gl.BLEND);
-        else this.renderer.disable(this.gl.BLEND);
-
-        this.renderer.setDepthMask(this.depthWrite);
-        this.renderer.setDepthFunc(this.depthFunc);
-        if (this.blendFunc.src)
-            this.renderer.setBlendFunc(
-                this.blendFunc.src,
-                this.blendFunc.dst,
-                this.blendFunc.srcAlpha,
-                this.blendFunc.dstAlpha
-            );
-        this.renderer.setBlendEquation(this.blendEquation.modeRGB, this.blendEquation.modeAlpha);
-    }
-
     use() {
         let textureUnit = -1;
         const programActive = this.renderer.currentProgram === this.id;
@@ -245,17 +226,36 @@ export class Program {
         this.applyState();
     }
 
+    applyState() {
+        if (this.depthTest) this.renderer.enable(this.gl.DEPTH_TEST);
+        else this.renderer.disable(this.gl.DEPTH_TEST);
+
+        if (this.blendFunc.src) this.renderer.enable(this.gl.BLEND);
+        else this.renderer.disable(this.gl.BLEND);
+
+        this.renderer.setDepthMask(this.depthWrite);
+        this.renderer.setDepthFunc(this.depthFunc);
+        if (this.blendFunc.src)
+            this.renderer.setBlendFunc(
+                this.blendFunc.src,
+                this.blendFunc.dst,
+                this.blendFunc.srcAlpha,
+                this.blendFunc.dstAlpha
+            );
+        this.renderer.setBlendEquation(this.blendEquation.modeRGB, this.blendEquation.modeAlpha);
+    }
+
+
     remove() {
         this.gl.deleteProgram(this.program);
     }
 }
 
 function setUniform(gl: WebGLRenderingContext, type: number, location: WebGLUniformLocation, value: any) {
-    value = value.length ? flatten(value) : value;
-
+    const isArray = value.length;
     switch (type) {
         case WebGLRenderingContext.FLOAT: // 5126
-            return value.length ? gl.uniform1fv(location, value) : gl.uniform1f(location, value); // FLOAT
+            return isArray ? gl.uniform1fv(location, value) : gl.uniform1f(location, value); // FLOAT
         case WebGLRenderingContext.FLOAT_VEC2: // 35664
             return gl.uniform2fv(location, value); // FLOAT_VEC2
         case WebGLRenderingContext.FLOAT_VEC3: // 35665
@@ -266,7 +266,7 @@ function setUniform(gl: WebGLRenderingContext, type: number, location: WebGLUnif
         case 5124: // INT
         case 35678: // SAMPLER_2D
         case 35680:
-            return value.length ? gl.uniform1iv(location, value) : gl.uniform1i(location, value); // SAMPLER_CUBE
+            return isArray ? gl.uniform1iv(location, value) : gl.uniform1i(location, value); // SAMPLER_CUBE
         case 35671: // BOOL_VEC2
         case 35667:
             return gl.uniform2iv(location, value); // INT_VEC2
@@ -292,31 +292,6 @@ function addLineNumbers(string) {
     }
     return lines.join("\n");
 }
-
-function flatten(a) {
-    const arrayLen = a.length;
-    const valueLen = a[0].length;
-    if (valueLen === undefined) return a;
-    const length = arrayLen * valueLen;
-    let value = arrayCacheF32[length];
-    if (!value) arrayCacheF32[length] = value = new Float32Array(length);
-    for (let i = 0; i < arrayLen; i++) value.set(a[i], i * valueLen);
-    return value;
-}
-
-// function arraysEqual(a, b) {
-//   if (a.length !== b.length) return false;
-//   for (let i = 0, l = a.length; i < l; i++) {
-//     if (a[i] !== b[i]) return false;
-//   }
-//   return true;
-// }
-
-// function setArray(a, b) {
-//   for (let i = 0, l = a.length; i < l; i++) {
-//     a[i] = b[i];
-//   }
-// }
 
 let warnCount = 0;
 function warn(message) {

@@ -10,7 +10,6 @@ export class DisplayObject {
         this.alpha = 1;
         this.visible = true;
         this.renderable = false;
-        // this.aabb = new AABB2();
         this.parent = null;
         this.worldTransform = Create();
         this.localTransform = Create();

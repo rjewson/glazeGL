@@ -30,7 +30,8 @@ export class Buffer {
     update(data: any = undefined, usage: number = WebGLRenderingContext.DYNAMIC_DRAW) {
         this.usage = usage;
         this.bind();
-        if (!data) {
+
+        if (!data && this.data) {
             this.renderer.gl.bufferData(this.target, this.data, this.usage);
             return;
         }
@@ -47,6 +48,7 @@ export class Buffer {
         } else {
             this.renderer.gl.bufferSubData(this.target, 0, data);
         }
+
         this.needsUpdate = false;
     }
 }

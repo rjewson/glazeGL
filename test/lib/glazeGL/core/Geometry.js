@@ -1,6 +1,7 @@
 import { Buffer } from "./Buffer.js";
 export const QUAD_POS = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 export const QUAD_UV = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
+export const INDEX_ATTR = "index";
 let ID = 1;
 let ATTR_ID = 1;
 // To stop inifinite warnings
@@ -56,7 +57,7 @@ export class Geometry {
                     : attr.data.constructor === Uint16Array
                         ? this.gl.UNSIGNED_SHORT
                         : this.gl.UNSIGNED_INT); // Uint32Array
-        attr.target = key === "index" ? this.gl.ELEMENT_ARRAY_BUFFER : this.gl.ARRAY_BUFFER;
+        attr.target = key === INDEX_ATTR ? this.gl.ELEMENT_ARRAY_BUFFER : this.gl.ARRAY_BUFFER;
         attr.normalized = attr.normalized || false;
         attr.stride = attr.stride || 0;
         attr.offset = attr.offset || 0;
@@ -72,23 +73,15 @@ export class Geometry {
             }
             this.instancedCount = attr.count * attr.divisor;
         }
-        else if (key === "index") {
+        else if (key === INDEX_ATTR) {
             this.drawRange.count = attr.count;
         }
         else if (!this.attributes.index) {
             this.drawRange.count = Math.max(this.drawRange.count, attr.count);
         }
     }
-    // updateAttribute(attr) {
-    //     if (this.renderer.state.boundBuffer !== attr.buffer) {
-    //         this.gl.bindBuffer(attr.target, attr.buffer);
-    //         this.renderer.state.boundBuffer = attr.buffer;
-    //     }
-    //     this.gl.bufferData(attr.target, attr.data, this.gl.STATIC_DRAW);
-    //     attr.needsUpdate = false;
-    // }
     setIndex(attr) {
-        this.addAttribute("index", attr);
+        this.addAttribute(INDEX_ATTR, attr);
     }
     setDrawRange(start, count) {
         this.drawRange.start = start;
@@ -136,18 +129,13 @@ export class Geometry {
         if (this.attributes.index)
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.attributes.index.buffer.glBuffer);
     }
-    draw({ program, mode = this.gl.TRIANGLES }) {
+    draw(program, mode = this.gl.TRIANGLES) {
         if (this.renderer.currentGeometry !== `${this.id}_${program.attributeOrder}`) {
             if (!this.VAOs[program.attributeOrder])
                 this.createVAO(program);
             this.renderer.bindVertexArray(this.VAOs[program.attributeOrder]);
             this.renderer.currentGeometry = `${this.id}_${program.attributeOrder}`;
         }
-        // Check if any attributes need updating
-        // program.attributeLocations.forEach((location, { name }) => {
-        //     const attr = this.attributes[name];
-        //     if (attr.needsUpdate) this.updateAttribute(attr);
-        // });
         for (const entry of this.buffers) {
             const buffer = entry[0];
             if (buffer.needsUpdate) {
