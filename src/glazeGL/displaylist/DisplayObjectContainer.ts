@@ -1,16 +1,12 @@
-import { DisplayObject } from "./DIsplayObject.js";
-import { AABB2 } from "../geom/AABB2.js";
+import { DisplayObject } from "./DisplayObject.js";
 
 export class DisplayObjectContainer extends DisplayObject {
     public head: DisplayObject;
     public tail: DisplayObject;
     public childCount: number;
 
-    public subTreeAABB: AABB2;
-
     constructor() {
         super();
-        this.subTreeAABB = new AABB2();
         this.childCount = 0;
     }
 
@@ -31,11 +27,6 @@ export class DisplayObjectContainer extends DisplayObject {
             this.insertBefore(this.findChildByIndex(index), child);
         }
         this.childAdded(child);
-    }
-
-    public childAdded(child: DisplayObject) {
-        this.childCount++;
-        child.parent = this;
     }
 
     public findChildByIndex(index: number): DisplayObject {
@@ -61,21 +52,14 @@ export class DisplayObjectContainer extends DisplayObject {
         return child;
     }
 
-    public childRemoved(child: DisplayObject) {
-        this.childCount--;
-        child.parent = null;
-    }
-
     public updateTransform() {
-        //Reset AABB
-        //this.aabb.reset();
         // super.updateTransform();
 
         const positionx: number = Math.floor(this.position.x);
         const positiony: number = Math.floor(this.position.y);
 
-        const sinR = this._rotationComponents.y; //Math.sin(rotation);
-        const cosR = this._rotationComponents.x; //Math.cos(rotation);
+        const sinR = this._rotationComponents.y;
+        const cosR = this._rotationComponents.x;
 
         this.localTransform[0] = cosR * this.scale.x;
         this.localTransform[1] = -sinR * this.scale.y;
@@ -110,27 +94,27 @@ export class DisplayObjectContainer extends DisplayObject {
 
         this.worldAlpha = this.alpha * this.parent.worldAlpha;
 
-        this.calcExtents();
-        //this.subTreeAABB.reset();
-        //this.subTreeAABB.addAABB(this.aabb);
-        //Expand AAABB to this DisplayObject -> New required
+        // this.calcExtents();
+
         var child = this.head;
         while (child != null) {
             child.updateTransform();
-            //Inflate this AABB to encapsulate child
-            //this.subTreeAABB.addAABB(child.aabb);
             child = child.next;
         }
     }
 
-    // public apply(slot:DisplayObject->Dynamic->Void,p:Dynamic=null) {
+    protected childAdded(child: DisplayObject) {
+        this.childCount++;
+        child.parent = this;
+    }
 
-    // }
-
-    //TODO Probably get rid of this...
+    protected childRemoved(child: DisplayObject) {
+        this.childCount--;
+        child.parent = null;
+    }
 
     //Linked Lists
-    public insertAfter(node: DisplayObject, newNode: DisplayObject) {
+    protected insertAfter(node: DisplayObject, newNode: DisplayObject) {
         newNode.prev = node;
         newNode.next = node.next;
         if (node.next == null) this.tail = newNode;
@@ -138,7 +122,7 @@ export class DisplayObjectContainer extends DisplayObject {
         node.next = newNode;
     }
 
-    public insertBefore(node: DisplayObject, newNode: DisplayObject) {
+    protected insertBefore(node: DisplayObject, newNode: DisplayObject) {
         newNode.prev = node.prev;
         newNode.next = node;
         if (node.prev == null) this.head = newNode;
@@ -146,7 +130,7 @@ export class DisplayObjectContainer extends DisplayObject {
         node.prev = newNode;
     }
 
-    public insertBeginning(newNode: DisplayObject) {
+    protected insertBeginning(newNode: DisplayObject) {
         if (this.head == null) {
             this.head = newNode;
             this.tail = newNode;
@@ -155,12 +139,12 @@ export class DisplayObjectContainer extends DisplayObject {
         } else this.insertBefore(this.head, newNode);
     }
 
-    public insertEnd(newNode: DisplayObject) {
+    protected insertEnd(newNode: DisplayObject) {
         if (this.tail == null) this.insertBeginning(newNode);
         else this.insertAfter(this.tail, newNode);
     }
 
-    public remove(node: DisplayObject) {
+    protected remove(node: DisplayObject) {
         if (node.prev == null) this.head = node.next;
         else node.prev.next = node.next;
         if (node.next == null) this.tail = node.prev;
@@ -168,7 +152,7 @@ export class DisplayObjectContainer extends DisplayObject {
         node.prev = node.next = null;
     }
 
-    public debug() {
+    protected debug() {
         var child = this.head;
         while (child != null) {
             child = child.next;

@@ -1,9 +1,7 @@
-import { DisplayObject } from "./DIsplayObject.js";
-import { AABB2 } from "../geom/AABB2.js";
+import { DisplayObject } from "./DisplayObject.js";
 export class DisplayObjectContainer extends DisplayObject {
     constructor() {
         super();
-        this.subTreeAABB = new AABB2();
         this.childCount = 0;
     }
     addChild(child) {
@@ -24,10 +22,6 @@ export class DisplayObjectContainer extends DisplayObject {
             this.insertBefore(this.findChildByIndex(index), child);
         }
         this.childAdded(child);
-    }
-    childAdded(child) {
-        this.childCount++;
-        child.parent = this;
     }
     findChildByIndex(index) {
         var child = this.head;
@@ -50,18 +44,12 @@ export class DisplayObjectContainer extends DisplayObject {
         this.removeChild(child);
         return child;
     }
-    childRemoved(child) {
-        this.childCount--;
-        child.parent = null;
-    }
     updateTransform() {
-        //Reset AABB
-        //this.aabb.reset();
         // super.updateTransform();
         const positionx = Math.floor(this.position.x);
         const positiony = Math.floor(this.position.y);
-        const sinR = this._rotationComponents.y; //Math.sin(rotation);
-        const cosR = this._rotationComponents.x; //Math.cos(rotation);
+        const sinR = this._rotationComponents.y;
+        const cosR = this._rotationComponents.x;
         this.localTransform[0] = cosR * this.scale.x;
         this.localTransform[1] = -sinR * this.scale.y;
         this.localTransform[3] = sinR * this.scale.x;
@@ -88,21 +76,21 @@ export class DisplayObjectContainer extends DisplayObject {
         this.worldTransform[4] = b10 * a01 + b11 * a11;
         this.worldTransform[5] = b10 * a02 + b11 * a12 + b12;
         this.worldAlpha = this.alpha * this.parent.worldAlpha;
-        this.calcExtents();
-        //this.subTreeAABB.reset();
-        //this.subTreeAABB.addAABB(this.aabb);
-        //Expand AAABB to this DisplayObject -> New required
+        // this.calcExtents();
         var child = this.head;
         while (child != null) {
             child.updateTransform();
-            //Inflate this AABB to encapsulate child
-            //this.subTreeAABB.addAABB(child.aabb);
             child = child.next;
         }
     }
-    // public apply(slot:DisplayObject->Dynamic->Void,p:Dynamic=null) {
-    // }
-    //TODO Probably get rid of this...
+    childAdded(child) {
+        this.childCount++;
+        child.parent = this;
+    }
+    childRemoved(child) {
+        this.childCount--;
+        child.parent = null;
+    }
     //Linked Lists
     insertAfter(node, newNode) {
         newNode.prev = node;

@@ -40,10 +40,10 @@
                 for (var y = 0; y < count; y++) {
                     const sprite = new Sprite();
                     sprite.texture = spriteTexture;
-                    sprite.position.x = 10 + (x * 15);
-                    sprite.position.y = 10 + (y * 15);
-                    sprite.scale.x = 5;
-                    sprite.scale.y = 5;
+                    sprite.position.x = 5 + (x * 10);
+                    sprite.position.y = 5 + (y * 10);
+                    sprite.scale.x = 4;
+                    sprite.scale.y = 4;
                     stage.addChild(sprite);
                     sprites.push(sprite);
                 }
@@ -54,12 +54,14 @@
             displayList.resize(1000, 1000);
 
             camera.focus(0, 0);
-
+            let time = 0;
             const draw = () => {
                 renderer.render({ renderable: displayList });
                 for (const sprite of sprites) {
-                    sprite.rotation += 0.01;
+                    sprite.rotation += 0.1;
+                    // sprite.scale.x = sprite.scale.y = 5 + 20*Math.sin(time);
                 }
+                time+=0.001;
                 window.requestAnimationFrame(draw);
             };
 

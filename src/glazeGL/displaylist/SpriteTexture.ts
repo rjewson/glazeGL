@@ -10,19 +10,21 @@ export class SpriteTexture {
     public noFrame: boolean;
     public uvs: Float32Array;
 
-    constructor(baseTexture: Texture, frame: Rectangle, pivot: Vector2 = null) {
-        this.noFrame = false;
+    constructor(baseTexture: Texture, frame: Rectangle = undefined, pivot: Vector2 = undefined) {
         this.baseTexture = baseTexture;
 
-        if (frame == null) {
+        if (!frame) {
             this.noFrame = true;
             this.frame = new Rectangle(0, 0, 1, 1);
         } else {
+            this.noFrame = false;
             this.frame = frame;
         }
+
         this.trim = new Vector2();
-        this.pivot = pivot == null ? new Vector2() : pivot;
+        this.pivot = pivot ? new Vector2() : pivot;
         this.uvs = new Float32Array(8);
+
         this.updateUVS();
     }
 

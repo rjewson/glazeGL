@@ -1,18 +1,18 @@
 import { Rectangle } from "../geom/Rectangle.js";
 import { Vector2 } from "../geom/Vector2.js";
 export class SpriteTexture {
-    constructor(baseTexture, frame, pivot = null) {
-        this.noFrame = false;
+    constructor(baseTexture, frame = undefined, pivot = undefined) {
         this.baseTexture = baseTexture;
-        if (frame == null) {
+        if (!frame) {
             this.noFrame = true;
             this.frame = new Rectangle(0, 0, 1, 1);
         }
         else {
+            this.noFrame = false;
             this.frame = frame;
         }
         this.trim = new Vector2();
-        this.pivot = pivot == null ? new Vector2() : pivot;
+        this.pivot = pivot ? new Vector2() : pivot;
         this.uvs = new Float32Array(8);
         this.updateUVS();
     }

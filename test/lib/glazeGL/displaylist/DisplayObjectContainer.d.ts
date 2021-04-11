@@ -1,23 +1,21 @@
-import { DisplayObject } from "./DIsplayObject.js";
-import { AABB2 } from "../geom/AABB2.js";
+import { DisplayObject } from "./DisplayObject.js";
 export declare class DisplayObjectContainer extends DisplayObject {
     head: DisplayObject;
     tail: DisplayObject;
     childCount: number;
-    subTreeAABB: AABB2;
     constructor();
     addChild(child: DisplayObject): void;
     addChildAt(child: DisplayObject, index: number): void;
-    childAdded(child: DisplayObject): void;
     findChildByIndex(index: number): DisplayObject;
     removeChild(child: DisplayObject): void;
     removeChildAt(index: number): DisplayObject;
-    childRemoved(child: DisplayObject): void;
     updateTransform(): void;
-    insertAfter(node: DisplayObject, newNode: DisplayObject): void;
-    insertBefore(node: DisplayObject, newNode: DisplayObject): void;
-    insertBeginning(newNode: DisplayObject): void;
-    insertEnd(newNode: DisplayObject): void;
-    remove(node: DisplayObject): void;
-    debug(): void;
+    protected childAdded(child: DisplayObject): void;
+    protected childRemoved(child: DisplayObject): void;
+    protected insertAfter(node: DisplayObject, newNode: DisplayObject): void;
+    protected insertBefore(node: DisplayObject, newNode: DisplayObject): void;
+    protected insertBeginning(newNode: DisplayObject): void;
+    protected insertEnd(newNode: DisplayObject): void;
+    protected remove(node: DisplayObject): void;
+    protected debug(): void;
 }

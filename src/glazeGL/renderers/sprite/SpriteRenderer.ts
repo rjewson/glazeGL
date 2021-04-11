@@ -117,7 +117,8 @@ export class SpriteRenderer {
                 }
                 //if (clip == null || sprite.aabb.intersect(clip)) {
                 //sprite.calcExtents();
-                this.AddSpriteToBatch(sprite, indexRun);
+                //this.AddSpriteToBatch(sprite, indexRun);
+                sprite.draw(indexRun * BYTES_PER_QUAD, this.dataBuffer.data);
                 indexRun++;
                 // }
             }
@@ -137,6 +138,7 @@ export class SpriteRenderer {
     }
 
     public AddSpriteToBatch(sprite: Sprite, indexRun: number) {
+        sprite.calcExtents();
         const index = indexRun * BYTES_PER_QUAD;
         const uvs = sprite.texture.uvs;
         const data = this.dataBuffer.data;

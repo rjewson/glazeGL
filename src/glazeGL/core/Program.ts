@@ -227,14 +227,21 @@ export class Program {
     }
 
     applyState() {
-        if (this.depthTest) this.renderer.enable(this.gl.DEPTH_TEST);
-        else this.renderer.disable(this.gl.DEPTH_TEST);
+        if (this.depthTest) {
+            this.renderer.enable(this.gl.DEPTH_TEST);
+        } else {
+            this.renderer.disable(this.gl.DEPTH_TEST);
+        }
 
-        if (this.blendFunc.src) this.renderer.enable(this.gl.BLEND);
-        else this.renderer.disable(this.gl.BLEND);
+        if (this.blendFunc.src) {
+            this.renderer.enable(this.gl.BLEND);
+        } else {
+            this.renderer.disable(this.gl.BLEND);
+        }
 
         this.renderer.setDepthMask(this.depthWrite);
         this.renderer.setDepthFunc(this.depthFunc);
+
         if (this.blendFunc.src)
             this.renderer.setBlendFunc(
                 this.blendFunc.src,
@@ -244,7 +251,6 @@ export class Program {
             );
         this.renderer.setBlendEquation(this.blendEquation.modeRGB, this.blendEquation.modeAlpha);
     }
-
 
     remove() {
         this.gl.deleteProgram(this.program);

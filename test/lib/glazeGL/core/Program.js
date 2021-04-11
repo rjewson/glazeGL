@@ -149,14 +149,18 @@ export class Program {
         this.applyState();
     }
     applyState() {
-        if (this.depthTest)
+        if (this.depthTest) {
             this.renderer.enable(this.gl.DEPTH_TEST);
-        else
+        }
+        else {
             this.renderer.disable(this.gl.DEPTH_TEST);
-        if (this.blendFunc.src)
+        }
+        if (this.blendFunc.src) {
             this.renderer.enable(this.gl.BLEND);
-        else
+        }
+        else {
             this.renderer.disable(this.gl.BLEND);
+        }
         this.renderer.setDepthMask(this.depthWrite);
         this.renderer.setDepthFunc(this.depthFunc);
         if (this.blendFunc.src)

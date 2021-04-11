@@ -9,28 +9,18 @@ export class SpriteRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.gl = renderer.gl;
-        this.size = 0;
         this.uniforms = {
             projectionVector: { value: [] },
             uSampler: { value: new Texture(renderer) },
         };
         this.program = new Program(renderer, { vertex, fragment, uniforms: this.uniforms });
-        // this.dataBuffer = this.gl.createBuffer();
-        // this.data = new Float32Array(BUFFER_SIZE * BYTES_PER_QUAD);
-        // this.gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, this.dataBuffer);
-        // this.gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, this.data, WebGLRenderingContext.DYNAMIC_DRAW);
         this.dataBuffer = new Buffer(this.renderer);
         this.dataBuffer.update(new Float32Array(BUFFER_SIZE * BYTES_PER_QUAD));
-        // this.indexBuffer = this.gl.createBuffer();
-        // this.indices = createQuadIndiciesBuffer(BUFFER_SIZE);
-        // this.gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        // this.gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indices, WebGLRenderingContext.STATIC_DRAW);
         this.indexBuffer = new Buffer(this.renderer, WebGLRenderingContext.ELEMENT_ARRAY_BUFFER);
         this.indexBuffer.update(createQuadIndiciesBuffer(BUFFER_SIZE), WebGLRenderingContext.STATIC_DRAW);
         this.geometry = new Geometry(renderer, {
             aVertexPosition: {
                 buffer: this.dataBuffer,
-                //data: this.data,
                 type: WebGLRenderingContext.FLOAT,
                 size: 2,
                 stride: BYTES_PER_QUAD,
@@ -38,7 +28,6 @@ export class SpriteRenderer {
             },
             aTextureCoord: {
                 buffer: this.dataBuffer,
-                //data: this.data,
                 type: WebGLRenderingContext.FLOAT,
                 size: 2,
                 stride: BYTES_PER_QUAD,
@@ -46,7 +35,6 @@ export class SpriteRenderer {
             },
             aColor: {
                 buffer: this.dataBuffer,
-                //data: this.data,
                 type: WebGLRenderingContext.FLOAT,
                 size: 1,
                 stride: BYTES_PER_QUAD,
@@ -56,7 +44,6 @@ export class SpriteRenderer {
         });
         this.geometry.setIndex({
             buffer: this.indexBuffer,
-            //data: this.indices,
             type: WebGLRenderingContext.UNSIGNED_SHORT
         });
     }
@@ -98,7 +85,8 @@ export class SpriteRenderer {
                 }
                 //if (clip == null || sprite.aabb.intersect(clip)) {
                 //sprite.calcExtents();
-                this.AddSpriteToBatch(sprite, indexRun);
+                //this.AddSpriteToBatch(sprite, indexRun);
+                sprite.draw(indexRun * BYTES_PER_QUAD, this.dataBuffer.data);
                 indexRun++;
                 // }
             }
@@ -117,6 +105,7 @@ export class SpriteRenderer {
         this.geometry.draw(this.program);
     }
     AddSpriteToBatch(sprite, indexRun) {
+        sprite.calcExtents();
         const index = indexRun * BYTES_PER_QUAD;
         const uvs = sprite.texture.uvs;
         const data = this.dataBuffer.data;

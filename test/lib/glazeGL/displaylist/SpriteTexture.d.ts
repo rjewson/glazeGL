@@ -8,6 +8,6 @@ export declare class SpriteTexture {
     pivot: Vector2;
     noFrame: boolean;
     uvs: Float32Array;
-    constructor(baseTexture: Texture, frame: Rectangle, pivot?: Vector2);
+    constructor(baseTexture: Texture, frame?: Rectangle, pivot?: Vector2);
     updateUVS(): void;
 }

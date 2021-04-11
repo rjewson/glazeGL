@@ -9,5 +9,6 @@ export declare class Sprite extends DisplayObjectContainer {
     blendFuncD: number;
     transformedVerts: Float32Array;
     constructor();
+    draw(index: number, data: Float32Array): void;
     calcExtents(): void;
 }
