@@ -9,7 +9,6 @@ export class NewSpriteRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.gl = renderer.gl;
-        this.size = 0;
         this.uniforms = {
             projectionVector: { value: [] },
             uSampler: { value: new Texture(renderer) },
