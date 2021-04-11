@@ -7,13 +7,11 @@ export class Transform2D {
         this.pivot = new Vector2();
         this._rotation = 0;
         this._rotationComponents = new Vector2();
-        this.alpha = 1;
-        this.parent = null;
-        this.children = [];
+        // this.alpha = 1;
         this.worldTransform = CreateMat3();
         this.localTransform = CreateMat3();
     }
-    updateTransform() {
+    updateTransform(parent) {
         const positionx = Math.floor(this.position.x);
         const positiony = Math.floor(this.position.y);
         const sinR = this._rotationComponents.y;
@@ -22,7 +20,7 @@ export class Transform2D {
         this.localTransform[1] = -sinR * this.scale.y;
         this.localTransform[3] = sinR * this.scale.x;
         this.localTransform[4] = cosR * this.scale.y;
-        const parentTransform = this.parent.worldTransform;
+        const parentTransform = parent.worldTransform;
         const a00 = this.localTransform[0];
         const a01 = this.localTransform[1];
         const a02 = positionx - (this.localTransform[0] * this.pivot.x - this.pivot.y * this.localTransform[1]);
@@ -43,30 +41,7 @@ export class Transform2D {
         this.worldTransform[3] = b10 * a00 + b11 * a10;
         this.worldTransform[4] = b10 * a01 + b11 * a11;
         this.worldTransform[5] = b10 * a02 + b11 * a12 + b12;
-        this.worldAlpha = this.alpha * this.parent.worldAlpha;
-        for (const child of this.children) {
-            child.updateTransform();
-        }
-    }
-    addChild(child, updateParent = true) {
-        if (!~this.children.indexOf(child)) {
-            this.children.push(child);
-        }
-        if (updateParent)
-            child.setParent(this, false);
-    }
-    removeChild(child, updateParent = true) {
-        if (!!~this.children.indexOf(child))
-            this.children.splice(this.children.indexOf(child), 1);
-        if (updateParent)
-            child.setParent(null, false);
-    }
-    setParent(parent, updateParent = true) {
-        if (this.parent && parent !== this.parent)
-            this.parent.removeChild(this, false);
-        this.parent = parent;
-        if (updateParent && parent)
-            parent.addChild(this, false);
+        // this.worldAlpha = this.alpha * parent.worldAlpha;
     }
     get rotation() {
         return this._rotation;

@@ -1,12 +1,13 @@
 import { Geometry } from "../../core/Geometry.js";
 import { Program } from "../../core/Program.js";
 import { Renderer } from "../../core/Renderer.js";
+import { NewStage } from "../../displaylist/NewStage.js";
 import { Sprite } from "../../displaylist/Sprite.js";
 import { Stage } from "../../displaylist/Stage.js";
 export declare class NewSpriteRenderer {
     renderer: Renderer;
     gl: WebGLRenderingContext;
-    stage: Stage;
+    stage: NewStage;
     program: Program;
     uniforms: any;
     geometry: Geometry;

@@ -1,6 +1,8 @@
 import { Vector2 } from "../geom/Vector2.js";
-export class NewSprite {
+import { NewDisplayObjectContainer } from "./NewDisplayObjectContainer.js";
+export class NewSprite extends NewDisplayObjectContainer {
     constructor() {
+        super();
         this.anchor = new Vector2();
         this.transformedVerts = new Float32Array(8);
         this.blendEquation = WebGLRenderingContext.FUNC_ADD;

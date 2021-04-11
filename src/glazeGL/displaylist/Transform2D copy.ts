@@ -3,17 +3,22 @@ import { CreateMat3 } from "../geom/Matrix3.js";
 import { NewSprite } from "../index.js";
 
 export class Transform2D {
+    public id: string;
 
     public position: Vector2;
     public scale: Vector2;
     public pivot: Vector2;
+    public alpha: number;
 
-    // public alpha: number;
+    public parent: Transform2D;
+    public children: Array<Transform2D>;
 
     public localTransform: Float32Array;
 
     public worldTransform: Float32Array;
-    // public worldAlpha: number;
+    public worldAlpha: number;
+
+    public sprite: NewSprite;
 
     private _rotation: number;
     private _rotationComponents: Vector2;
@@ -26,13 +31,15 @@ export class Transform2D {
         this._rotation = 0;
         this._rotationComponents = new Vector2();
 
-        // this.alpha = 1;
+        this.alpha = 1;
 
+        this.parent = null;
+        this.children = [];
         this.worldTransform = CreateMat3();
         this.localTransform = CreateMat3();
     }
 
-    public updateTransform(parent: Transform2D) {
+    public updateTransform() {
         const positionx: number = Math.floor(this.position.x);
         const positiony: number = Math.floor(this.position.y);
 
@@ -44,7 +51,7 @@ export class Transform2D {
         this.localTransform[3] = sinR * this.scale.x;
         this.localTransform[4] = cosR * this.scale.y;
 
-        const parentTransform = parent.worldTransform;
+        const parentTransform = this.parent.worldTransform;
 
         const a00 = this.localTransform[0];
         const a01 = this.localTransform[1];
@@ -70,7 +77,29 @@ export class Transform2D {
         this.worldTransform[4] = b10 * a01 + b11 * a11;
         this.worldTransform[5] = b10 * a02 + b11 * a12 + b12;
 
-        // this.worldAlpha = this.alpha * parent.worldAlpha;
+        this.worldAlpha = this.alpha * this.parent.worldAlpha;
+
+        for (const child of this.children) {
+            child.updateTransform();
+        }
+    }
+
+    addChild(child: Transform2D, updateParent = true) {
+        if (!~this.children.indexOf(child)) {
+            this.children.push(child);
+        }
+        if (updateParent) child.setParent(this, false);
+    }
+
+    removeChild(child: Transform2D, updateParent = true) {
+        if (!!~this.children.indexOf(child)) this.children.splice(this.children.indexOf(child), 1);
+        if (updateParent) child.setParent(null, false);
+    }
+
+    setParent(parent: Transform2D, updateParent = true) {
+        if (this.parent && parent !== this.parent) this.parent.removeChild(this, false);
+        this.parent = parent;
+        if (updateParent && parent) parent.addChild(this, false);
     }
 
     get rotation(): number {

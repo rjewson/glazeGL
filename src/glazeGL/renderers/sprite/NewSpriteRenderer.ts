@@ -3,9 +3,9 @@ import { Geometry } from "../../core/Geometry.js";
 import { Program } from "../../core/Program.js";
 import { Renderer } from "../../core/Renderer.js";
 import { Texture } from "../../core/Texture.js";
-import { DisplayObjectContainer } from "../../displaylist/DisplayObjectContainer.js";
-import { Sprite } from "../../displaylist/Sprite.js";
-import { Stage } from "../../displaylist/Stage.js";
+import { NewDisplayObjectContainer } from "../../displaylist/NewDisplayObjectContainer.js";
+import { NewStage } from "../../displaylist/NewStage.js";
+import { NewSprite } from "../../displaylist/NewSprite.js";
 
 const BUFFER_SIZE = 1000;
 const BYTES_PER_QUAD = 5 * 4;
@@ -14,7 +14,7 @@ export class NewSpriteRenderer {
     renderer: Renderer;
     gl: WebGLRenderingContext;
 
-    stage: Stage;
+    stage: NewStage;
 
     program: Program;
     uniforms: any;
@@ -29,8 +29,6 @@ export class NewSpriteRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.gl = renderer.gl;
-
-        this.size = 0;
 
         this.uniforms = {
             projectionVector: { value: [] },
@@ -94,19 +92,19 @@ export class NewSpriteRenderer {
         this.uniforms.projectionVector.value[1] = height / 2;
     }
 
-    public addStage(stage: Stage) {
+    public addStage(stage: NewStage) {
         this.stage = stage;
     }
 
     draw() {
         this.stage.updateTransform();
 
-        var node: DisplayObjectContainer;
-        var stack: Array<DisplayObjectContainer>;
+        var node: NewDisplayObjectContainer;
+        var stack: Array<NewDisplayObjectContainer>;
         var top: number;
 
         node = this.stage;
-        stack = new Array<DisplayObjectContainer>(1000); // Arbitary assignment of 1000 stack slots
+        stack = new Array<NewDisplayObjectContainer>(1000); // Arbitary assignment of 1000 stack slots
 
         stack[0] = node;
         top = 1;
@@ -123,7 +121,7 @@ export class NewSpriteRenderer {
             //return the result
 
             if (thisNode.visible && thisNode.renderable) {
-                var sprite: Sprite = thisNode as Sprite;
+                var sprite: NewSprite = thisNode as NewSprite;
                 if (sprite.texture.baseTexture != currentTexture || indexRun == BUFFER_SIZE) {
                     this.Flush(currentTexture, indexRun);
                     indexRun = 0;

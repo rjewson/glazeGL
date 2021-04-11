@@ -1,4 +1,4 @@
-import { DisplayObject } from "./DIsplayObject.js";
+import { DisplayObject } from "./DisplayObject.js";
 import { AABB2 } from "../geom/AABB2.js";
 export class DisplayObjectContainer extends DisplayObject {
     constructor() {

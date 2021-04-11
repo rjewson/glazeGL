@@ -1,8 +1,10 @@
 import { Vector2 } from "../geom/Vector2.js";
 import { Transform2D } from "../index.js";
+import { NewDisplayObjectContainer } from "./NewDisplayObjectContainer.js";
 import { SpriteTexture } from "./SpriteTexture.js";
 
-export class NewSprite {
+export class NewSprite extends NewDisplayObjectContainer {
+
     public anchor: Vector2;
     public texture: SpriteTexture;
     public blendEquation: number;
@@ -12,6 +14,7 @@ export class NewSprite {
     public transformedVerts: Float32Array;
 
     constructor() {
+        super();
         this.anchor = new Vector2();
         this.transformedVerts = new Float32Array(8);
         this.blendEquation = WebGLRenderingContext.FUNC_ADD;
