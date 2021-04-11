@@ -13,4 +13,7 @@ import { SpriteTexture } from "./displaylist/SpriteTexture.js";
 import { DisplayObjectContainer } from "./displaylist/DisplayObjectContainer.js";
 import { Vector2 } from "./geom/Vector2.js";
 import { Rectangle } from "./geom/Rectangle.js";
-export { Geometry, Mesh, Program, Renderer, Texture, RenderTarget, Quad, SpriteRenderer, Stage, Camera, Sprite, SpriteTexture, DisplayObjectContainer, Vector2, Rectangle, };
+import { Transform2D } from "./displaylist/Transform2D.js";
+import { NewSprite } from "./displaylist/NewSprite.js";
+import { NewSpriteRenderer } from "./renderers/sprite/NewSpriteRenderer.js";
+export { Geometry, Mesh, Program, Renderer, Texture, RenderTarget, Quad, SpriteRenderer, Stage, Camera, Sprite, SpriteTexture, DisplayObjectContainer, Vector2, Rectangle, Transform2D, NewSprite, NewSpriteRenderer };

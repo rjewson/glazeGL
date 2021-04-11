@@ -2,56 +2,12 @@
 <html>
     <head></head>
     <body>
-        <script type="module">
-            import { Renderer, Texture, Geometry, Program,Mesh,Quad  } from "/lib/glazeGL/index.js";
-
-            // glsl
-            const vertex = `
-                attribute vec2 uv;
-                attribute vec2 position;
-                varying vec2 vUv;
-                void main() {
-                    vUv = uv;
-                    gl_Position = vec4(position, 0.0, 1.0);
-                }
-            `;
-
-            const fragment = `
-                precision highp float;
-                uniform sampler2D uSampler;
-                varying vec2 vUv;
-                void main() {
-                    vec3 tex = texture2D(uSampler, vUv).rgb;
-                    gl_FragColor.rgba = vec4(1.0,0.0,0.0,1.0);
-                    gl_FragColor.rgba = vec4(tex,1.0);
-                }
-            `;
-
-            const renderer = new Renderer({ width: 400, height: 400 });
-
-            document.body.appendChild(renderer.canvas);
-
-            const texture = new Texture(renderer);
-
-            const img = new Image();
-            
-            img.src = "assets/texture.jpg";
-
-            const uniforms = {
-                uSampler: { value: texture },
-            };
-
-            const program = new Program(renderer, { vertex, fragment, uniforms });
-
-            const geometry = new Quad(renderer);
-
-            const node = new Mesh(renderer, { geometry, program, mode: WebGLRenderingContext.TRIANGLE_STRIP });
-
-            img.onload = () => {
-                texture.image = img;
-                texture.update();
-                renderer.render({ node });
-            };
-        </script>
+        <h1>glazeGL examples:</h1>
+        <ul>
+            <li><a href="examples/simple.html">Simple Texture</a></li>
+            <li><a href="examples/rtt.html">Render to texture</a></li>
+            <li><a href="examples/displayList.html">Display List</a></li>
+            <li><a href="examples/displayListPerf.html">Display List (performance)</a></li>
+        </ul>
     </body>
 </html>

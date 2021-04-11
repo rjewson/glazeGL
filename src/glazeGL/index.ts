@@ -13,6 +13,10 @@ import { SpriteTexture } from "./displaylist/SpriteTexture.js";
 import { DisplayObjectContainer } from "./displaylist/DisplayObjectContainer.js";
 import { Vector2 } from "./geom/Vector2.js";
 import { Rectangle } from "./geom/Rectangle.js";
+import { Transform2D } from "./displaylist/Transform2D.js";
+import { NewSprite } from "./displaylist/NewSprite.js";
+import { NewSpriteRenderer } from "./renderers/sprite/NewSpriteRenderer.js";
+
 
 export {
     Geometry,
@@ -30,4 +34,7 @@ export {
     DisplayObjectContainer,
     Vector2,
     Rectangle,
+    Transform2D,
+    NewSprite,
+    NewSpriteRenderer
 };

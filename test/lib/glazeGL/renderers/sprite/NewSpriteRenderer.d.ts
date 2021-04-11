@@ -3,7 +3,7 @@ import { Program } from "../../core/Program.js";
 import { Renderer } from "../../core/Renderer.js";
 import { Sprite } from "../../displaylist/Sprite.js";
 import { Stage } from "../../displaylist/Stage.js";
-export declare class SpriteRenderer {
+export declare class NewSpriteRenderer {
     renderer: Renderer;
     gl: WebGLRenderingContext;
     stage: Stage;

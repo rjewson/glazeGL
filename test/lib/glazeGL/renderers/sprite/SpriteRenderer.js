@@ -89,7 +89,7 @@ export class SpriteRenderer {
             //return the result
             if (thisNode.visible && thisNode.renderable) {
                 var sprite = thisNode;
-                if (sprite.texture.baseTexture != currentTexture || indexRun == this.size) {
+                if (sprite.texture.baseTexture != currentTexture || indexRun == BUFFER_SIZE) {
                     this.Flush(currentTexture, indexRun);
                     indexRun = 0;
                     currentTexture = sprite.texture.baseTexture;
@@ -97,6 +97,7 @@ export class SpriteRenderer {
                     this.gl.blendFunc(sprite.blendFuncS, sprite.blendFuncD);
                 }
                 //if (clip == null || sprite.aabb.intersect(clip)) {
+                //sprite.calcExtents();
                 this.AddSpriteToBatch(sprite, indexRun);
                 indexRun++;
                 // }

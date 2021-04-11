@@ -33,17 +33,17 @@
             const stage = new Stage();
             const spriteTexture = new SpriteTexture(texture, new Rectangle(0, 0, 2, 2));
 
-            const count = 20;
+            const count = 100;
 
             const sprites = [];
             for (var x = 0; x < count; x++) {
                 for (var y = 0; y < count; y++) {
                     const sprite = new Sprite();
                     sprite.texture = spriteTexture;
-                    sprite.position.x = 10 + (x * 55);
-                    sprite.position.y = 10 + (y * 55);
-                    sprite.scale.x = 15;
-                    sprite.scale.y = 15;
+                    sprite.position.x = 10 + (x * 15);
+                    sprite.position.y = 10 + (y * 15);
+                    sprite.scale.x = 5;
+                    sprite.scale.y = 5;
                     stage.addChild(sprite);
                     sprites.push(sprite);
                 }
@@ -57,7 +57,9 @@
 
             const draw = () => {
                 renderer.render({ renderable: displayList });
-                sprites.forEach(sprite => sprite.rotation += 0.01);
+                for (const sprite of sprites) {
+                    sprite.rotation += 0.01;
+                }
                 window.requestAnimationFrame(draw);
             };
 

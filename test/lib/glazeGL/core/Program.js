@@ -116,18 +116,18 @@ export class Program {
             // For structs, get the specific property instead of the entire object
             if (location.isStruct) {
                 uniform = uniform[location.structProperty];
-                name += `.${location.structProperty}`;
+                //name += `.${location.structProperty}`;
             }
             if (location.isStructArray) {
                 uniform = uniform[location.structIndex][location.structProperty];
-                name += `[${location.structIndex}].${location.structProperty}`;
+                //name += `[${location.structIndex}].${location.structProperty}`;
             }
-            if (!uniform) {
-                return warn(`Active uniform ${name} has not been supplied`);
-            }
-            if (uniform && uniform.value === undefined) {
-                return warn(`${name} uniform is missing a value parameter`);
-            }
+            // if (!uniform) {
+            //     return warn(`Active uniform ${name} has not been supplied`);
+            // }
+            // if (uniform && uniform.value === undefined) {
+            //     return warn(`${name} uniform is missing a value parameter`);
+            // }
             if (uniform.value.texture) {
                 textureUnit = textureUnit + 1;
                 // Check if texture needs to be updated

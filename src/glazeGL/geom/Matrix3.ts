@@ -1,4 +1,4 @@
-export function Create(): Float32Array {
+export function CreateMat3(): Float32Array {
     return Identity(new Float32Array(9));
 }
 

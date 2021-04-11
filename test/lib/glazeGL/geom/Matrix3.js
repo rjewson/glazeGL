@@ -1,4 +1,4 @@
-export function Create() {
+export function CreateMat3() {
     return Identity(new Float32Array(9));
 }
 export function Identity(matrix) {
