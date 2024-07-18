@@ -8,10 +8,8 @@ export class Stage extends DisplayObjectContainer {
     }
 
     public updateTransform() {
-        var child = this.head;
-        while (child != null) {
+        for (const child of this.children) { 
             child.updateTransform();
-            child = child.next;
-        }
+        }     
     }
 }

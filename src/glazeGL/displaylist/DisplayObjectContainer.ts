@@ -1,55 +1,32 @@
 import { DisplayObject } from "./DIsplayObject";
 
 export class DisplayObjectContainer extends DisplayObject {
-    public head: DisplayObject;
-    public tail: DisplayObject;
-    public childCount: number;
-
+    public children :  DisplayObject[]
     constructor() {
         super();
-        this.childCount = 0;
+        this.children = [];
     }
 
     public addChild(child: DisplayObject) {
-        if (child.parent != null) child.parent.removeChild(child);
-        this.insertEnd(child);
+        this.children.push(child)
         this.childAdded(child);
     }
 
     public addChildAt(child: DisplayObject, index: number) {
-        if (index >= this.childCount) {
-            this.addChild(child);
-            return;
-        }
-        if (index == 0) {
-            this.insertBeginning(child);
-        } else {
-            this.insertBefore(this.findChildByIndex(index), child);
-        }
+        this.children.splice(index, 0, child);
         this.childAdded(child);
     }
 
     public findChildByIndex(index: number): DisplayObject {
-        var child = this.head;
-        var count = 0;
-        while (child != null) {
-            if (count++ == index) return child;
-            child = child.next;
-        }
-        return this.tail;
+        return this.children[index];
     }
 
     public removeChild(child: DisplayObject) {
-        if (child.parent == this) {
-            this.remove(child);
-            this.childRemoved(child);
-        }
+        this.children.splice(this.children.indexOf(child), 1);
     }
 
-    public removeChildAt(index: number): DisplayObject {
-        var child = this.findChildByIndex(index);
-        this.removeChild(child);
-        return child;
+    public removeChildAt(index: number) {
+        this.children.splice(index, 1);
     }
 
     public updateTransform() {
@@ -96,66 +73,22 @@ export class DisplayObjectContainer extends DisplayObject {
 
         // this.calcExtents();
 
-        var child = this.head;
-        while (child != null) {
+        for (const child of this.children) { 
             child.updateTransform();
-            child = child.next;
-        }
+        }       
+    }
+
+    public iterate(cb:any) {
+        for (const child of this.children) { 
+            cb(child);
+        }     
     }
 
     protected childAdded(child: DisplayObject) {
-        this.childCount++;
         child.parent = this;
     }
 
     protected childRemoved(child: DisplayObject) {
-        this.childCount--;
         child.parent = null;
-    }
-
-    //Linked Lists
-    protected insertAfter(node: DisplayObject, newNode: DisplayObject) {
-        newNode.prev = node;
-        newNode.next = node.next;
-        if (node.next == null) this.tail = newNode;
-        else node.next.prev = newNode;
-        node.next = newNode;
-    }
-
-    protected insertBefore(node: DisplayObject, newNode: DisplayObject) {
-        newNode.prev = node.prev;
-        newNode.next = node;
-        if (node.prev == null) this.head = newNode;
-        else node.prev.next = newNode;
-        node.prev = newNode;
-    }
-
-    protected insertBeginning(newNode: DisplayObject) {
-        if (this.head == null) {
-            this.head = newNode;
-            this.tail = newNode;
-            newNode.prev = null;
-            newNode.next = null;
-        } else this.insertBefore(this.head, newNode);
-    }
-
-    protected insertEnd(newNode: DisplayObject) {
-        if (this.tail == null) this.insertBeginning(newNode);
-        else this.insertAfter(this.tail, newNode);
-    }
-
-    protected remove(node: DisplayObject) {
-        if (node.prev == null) this.head = node.next;
-        else node.prev.next = node.next;
-        if (node.next == null) this.tail = node.prev;
-        else node.next.prev = node.prev;
-        node.prev = node.next = null;
-    }
-
-    protected debug() {
-        var child = this.head;
-        while (child != null) {
-            child = child.next;
-        }
     }
 }

@@ -7,7 +7,7 @@ import { DisplayObjectContainer } from "../../displaylist/DisplayObjectContainer
 import { Sprite } from "../../displaylist/Sprite";
 import { Stage } from "../../displaylist/Stage";
 
-const BUFFER_SIZE = 1000;
+const BUFFER_SIZE = 10000;
 const BYTES_PER_QUAD = 5 * 4;
 
 export class SpriteRenderer {
@@ -98,6 +98,21 @@ export class SpriteRenderer {
         var indexRun = 0;
         var currentTexture = null;
 
+        node.iterate((node) => {
+            if (node.visible && node.renderable) {
+                var sprite: Sprite = node as Sprite;
+                if (sprite.texture.baseTexture != currentTexture || indexRun == BUFFER_SIZE) {
+                    this.Flush(currentTexture, indexRun);
+                    indexRun = 0;
+                    currentTexture = sprite.texture.baseTexture;
+                    this.gl.blendEquation(sprite.blendEquation);
+                    this.gl.blendFunc(sprite.blendFuncS, sprite.blendFuncD);
+                }
+                sprite.draw(indexRun * BYTES_PER_QUAD, this.dataBuffer.data);
+                indexRun++;
+            }
+        });
+/*
         while (top > 0) {
             var thisNode = stack[--top];
             //If there is an adjacent node, push it to the stack
@@ -123,7 +138,7 @@ export class SpriteRenderer {
                 // }
             }
         }
-
+*/
         if (indexRun > 0) this.Flush(currentTexture, indexRun);
     }
 
@@ -136,7 +151,7 @@ export class SpriteRenderer {
         this.geometry.setDrawRange(0,size * 6);
         this.geometry.draw(this.program);
     }
-
+/*
     public AddSpriteToBatch(sprite: Sprite, indexRun: number) {
         sprite.calcExtents();
         const index = indexRun * BYTES_PER_QUAD;
@@ -182,6 +197,7 @@ export class SpriteRenderer {
         //Colour
         data[index + 19] = sprite.worldAlpha;
     }
+        */
 }
 
 const vertex = `

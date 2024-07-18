@@ -1164,6 +1164,9 @@ exports.DisplayObject = DisplayObject;
 "use strict";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -1186,56 +1189,36 @@ var DisplayObjectContainer = /*#__PURE__*/function (_DIsplayObject_1$Disp) {
     var _this;
     _classCallCheck(this, DisplayObjectContainer);
     _this = _callSuper(this, DisplayObjectContainer);
-    _this.childCount = 0;
+    _this.children = [];
     return _this;
   }
   _inherits(DisplayObjectContainer, _DIsplayObject_1$Disp);
   return _createClass(DisplayObjectContainer, [{
     key: "addChild",
     value: function addChild(child) {
-      if (child.parent != null) child.parent.removeChild(child);
-      this.insertEnd(child);
+      this.children.push(child);
       this.childAdded(child);
     }
   }, {
     key: "addChildAt",
     value: function addChildAt(child, index) {
-      if (index >= this.childCount) {
-        this.addChild(child);
-        return;
-      }
-      if (index == 0) {
-        this.insertBeginning(child);
-      } else {
-        this.insertBefore(this.findChildByIndex(index), child);
-      }
+      this.children.splice(index, 0, child);
       this.childAdded(child);
     }
   }, {
     key: "findChildByIndex",
     value: function findChildByIndex(index) {
-      var child = this.head;
-      var count = 0;
-      while (child != null) {
-        if (count++ == index) return child;
-        child = child.next;
-      }
-      return this.tail;
+      return this.children[index];
     }
   }, {
     key: "removeChild",
     value: function removeChild(child) {
-      if (child.parent == this) {
-        this.remove(child);
-        this.childRemoved(child);
-      }
+      this.children.splice(this.children.indexOf(child), 1);
     }
   }, {
     key: "removeChildAt",
     value: function removeChildAt(index) {
-      var child = this.findChildByIndex(index);
-      this.removeChild(child);
-      return child;
+      this.children.splice(index, 1);
     }
   }, {
     key: "updateTransform",
@@ -1272,70 +1255,44 @@ var DisplayObjectContainer = /*#__PURE__*/function (_DIsplayObject_1$Disp) {
       this.worldTransform[5] = b10 * a02 + b11 * a12 + b12;
       this.worldAlpha = this.alpha * this.parent.worldAlpha;
       // this.calcExtents();
-      var child = this.head;
-      while (child != null) {
-        child.updateTransform();
-        child = child.next;
+      var _iterator = _createForOfIteratorHelper(this.children),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var child = _step.value;
+          child.updateTransform();
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    }
+  }, {
+    key: "iterate",
+    value: function iterate(cb) {
+      var _iterator2 = _createForOfIteratorHelper(this.children),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var child = _step2.value;
+          cb(child);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
       }
     }
   }, {
     key: "childAdded",
     value: function childAdded(child) {
-      this.childCount++;
       child.parent = this;
     }
   }, {
     key: "childRemoved",
     value: function childRemoved(child) {
-      this.childCount--;
       child.parent = null;
-    }
-    //Linked Lists
-  }, {
-    key: "insertAfter",
-    value: function insertAfter(node, newNode) {
-      newNode.prev = node;
-      newNode.next = node.next;
-      if (node.next == null) this.tail = newNode;else node.next.prev = newNode;
-      node.next = newNode;
-    }
-  }, {
-    key: "insertBefore",
-    value: function insertBefore(node, newNode) {
-      newNode.prev = node.prev;
-      newNode.next = node;
-      if (node.prev == null) this.head = newNode;else node.prev.next = newNode;
-      node.prev = newNode;
-    }
-  }, {
-    key: "insertBeginning",
-    value: function insertBeginning(newNode) {
-      if (this.head == null) {
-        this.head = newNode;
-        this.tail = newNode;
-        newNode.prev = null;
-        newNode.next = null;
-      } else this.insertBefore(this.head, newNode);
-    }
-  }, {
-    key: "insertEnd",
-    value: function insertEnd(newNode) {
-      if (this.tail == null) this.insertBeginning(newNode);else this.insertAfter(this.tail, newNode);
-    }
-  }, {
-    key: "remove",
-    value: function remove(node) {
-      if (node.prev == null) this.head = node.next;else node.prev.next = node.next;
-      if (node.next == null) this.tail = node.prev;else node.next.prev = node.prev;
-      node.prev = node.next = null;
-    }
-  }, {
-    key: "debug",
-    value: function debug() {
-      var child = this.head;
-      while (child != null) {
-        child = child.next;
-      }
     }
   }]);
 }(DIsplayObject_1.DisplayObject);
@@ -1475,15 +1432,21 @@ var Sprite = /*#__PURE__*/function (_DisplayObjectContain) {
       var tx = this.worldTransform[2];
       var ty = this.worldTransform[5];
       //
-      this.transformedVerts[0] = a * w1 + c * h1 + tx;
-      this.transformedVerts[1] = d * h1 + b * w1 + ty;
-      this.transformedVerts[2] = a * w0 + c * h1 + tx;
-      this.transformedVerts[3] = d * h1 + b * w0 + ty;
-      this.transformedVerts[4] = a * w0 + c * h0 + tx;
-      this.transformedVerts[5] = d * h0 + b * w0 + ty;
-      this.transformedVerts[6] = a * w1 + c * h0 + tx;
-      this.transformedVerts[7] = d * h0 + b * w1 + ty;
+      /*
+              this.transformedVerts[0] = a * w1 + c * h1 + tx;
+              this.transformedVerts[1] = d * h1 + b * w1 + ty;
+      
+              this.transformedVerts[2] = a * w0 + c * h1 + tx;
+              this.transformedVerts[3] = d * h1 + b * w0 + ty;
+      
+              this.transformedVerts[4] = a * w0 + c * h0 + tx;
+              this.transformedVerts[5] = d * h0 + b * w0 + ty;
+      
+              this.transformedVerts[6] = a * w1 + c * h0 + tx;
+              this.transformedVerts[7] = d * h0 + b * w1 + ty;
+              
       //
+      */
       var uvs = this.texture.uvs;
       data[index + 0] = a * w1 + c * h1 + tx;
       data[index + 1] = d * h1 + b * w1 + ty;
@@ -1628,6 +1591,9 @@ exports.SpriteTexture = SpriteTexture;
 "use strict";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -1658,10 +1624,17 @@ var Stage = /*#__PURE__*/function (_DisplayObjectContain) {
   return _createClass(Stage, [{
     key: "updateTransform",
     value: function updateTransform() {
-      var child = this.head;
-      while (child != null) {
-        child.updateTransform();
-        child = child.next;
+      var _iterator = _createForOfIteratorHelper(this.children),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var child = _step.value;
+          child.updateTransform();
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
       }
     }
   }]);
@@ -2231,7 +2204,7 @@ var Buffer_1 = require("../../core/Buffer");
 var Geometry_1 = require("../../core/Geometry");
 var Program_1 = require("../../core/Program");
 var Texture_1 = require("../../core/Texture");
-var BUFFER_SIZE = 1000;
+var BUFFER_SIZE = 10000;
 var BYTES_PER_QUAD = 5 * 4;
 var SpriteRenderer = /*#__PURE__*/function () {
   //private data: Float32Array;
@@ -2299,6 +2272,7 @@ var SpriteRenderer = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw() {
+      var _this = this;
       this.stage.updateTransform();
       var node;
       var stack;
@@ -2309,30 +2283,47 @@ var SpriteRenderer = /*#__PURE__*/function () {
       top = 1;
       var indexRun = 0;
       var currentTexture = null;
-      while (top > 0) {
-        var thisNode = stack[--top];
-        //If there is an adjacent node, push it to the stack
-        if (thisNode.next != null) stack[top++] = thisNode.next; //Big assumption is only DisplayListContainers, which it is for now.
-        //If there is a child list, push the head (this will get processed first)
-        if (thisNode.head != null) stack[top++] = thisNode.head; //Same assumption.
-        //return the result
-        if (thisNode.visible && thisNode.renderable) {
-          var sprite = thisNode;
+      node.iterate(function (node) {
+        if (node.visible && node.renderable) {
+          var sprite = node;
           if (sprite.texture.baseTexture != currentTexture || indexRun == BUFFER_SIZE) {
-            this.Flush(currentTexture, indexRun);
+            _this.Flush(currentTexture, indexRun);
             indexRun = 0;
             currentTexture = sprite.texture.baseTexture;
-            this.gl.blendEquation(sprite.blendEquation);
-            this.gl.blendFunc(sprite.blendFuncS, sprite.blendFuncD);
+            _this.gl.blendEquation(sprite.blendEquation);
+            _this.gl.blendFunc(sprite.blendFuncS, sprite.blendFuncD);
           }
-          //if (clip == null || sprite.aabb.intersect(clip)) {
-          //sprite.calcExtents();
-          //this.AddSpriteToBatch(sprite, indexRun);
-          sprite.draw(indexRun * BYTES_PER_QUAD, this.dataBuffer.data);
+          sprite.draw(indexRun * BYTES_PER_QUAD, _this.dataBuffer.data);
           indexRun++;
-          // }
         }
-      }
+      });
+      /*
+              while (top > 0) {
+                  var thisNode = stack[--top];
+                  //If there is an adjacent node, push it to the stack
+                  if (thisNode.next != null) stack[top++] = thisNode.next as DisplayObjectContainer; //Big assumption is only DisplayListContainers, which it is for now.
+                  //If there is a child list, push the head (this will get processed first)
+                  if (thisNode.head != null) stack[top++] = thisNode.head as DisplayObjectContainer; //Same assumption.
+                  //return the result
+      
+                  if (thisNode.visible && thisNode.renderable) {
+                      var sprite: Sprite = thisNode as Sprite;
+                      if (sprite.texture.baseTexture != currentTexture || indexRun == BUFFER_SIZE) {
+                          this.Flush(currentTexture, indexRun);
+                          indexRun = 0;
+                          currentTexture = sprite.texture.baseTexture;
+                          this.gl.blendEquation(sprite.blendEquation);
+                          this.gl.blendFunc(sprite.blendFuncS, sprite.blendFuncD);
+                      }
+                      //if (clip == null || sprite.aabb.intersect(clip)) {
+                      //sprite.calcExtents();
+                      //this.AddSpriteToBatch(sprite, indexRun);
+                      sprite.draw(indexRun * BYTES_PER_QUAD, this.dataBuffer.data);
+                      indexRun++;
+                      // }
+                  }
+              }
+      */
       if (indexRun > 0) this.Flush(currentTexture, indexRun);
     }
   }, {
@@ -2345,50 +2336,6 @@ var SpriteRenderer = /*#__PURE__*/function () {
       this.program.use();
       this.geometry.setDrawRange(0, size * 6);
       this.geometry.draw(this.program);
-    }
-  }, {
-    key: "AddSpriteToBatch",
-    value: function AddSpriteToBatch(sprite, indexRun) {
-      sprite.calcExtents();
-      var index = indexRun * BYTES_PER_QUAD;
-      var uvs = sprite.texture.uvs;
-      var data = this.dataBuffer.data;
-      //0
-      //Verts
-      data[index + 0] = sprite.transformedVerts[0];
-      data[index + 1] = sprite.transformedVerts[1];
-      //UV
-      data[index + 2] = uvs[0]; //frame.x / tw;
-      data[index + 3] = uvs[1]; //frame.y / th;
-      //Colour
-      data[index + 4] = sprite.worldAlpha;
-      //1
-      //Verts
-      data[index + 5] = sprite.transformedVerts[2];
-      data[index + 6] = sprite.transformedVerts[3];
-      //UV
-      data[index + 7] = uvs[2]; //(frame.x + frame.width) / tw;
-      data[index + 8] = uvs[3]; //frame.y / th;
-      //Colour
-      data[index + 9] = sprite.worldAlpha;
-      //2
-      //Verts
-      data[index + 10] = sprite.transformedVerts[4];
-      data[index + 11] = sprite.transformedVerts[5];
-      //UV
-      data[index + 12] = uvs[4]; //(frame.x + frame.width) / tw;
-      data[index + 13] = uvs[5]; //(frame.y + frame.height) / th;
-      //Colour
-      data[index + 14] = sprite.worldAlpha;
-      //3
-      //Verts
-      data[index + 15] = sprite.transformedVerts[6];
-      data[index + 16] = sprite.transformedVerts[7];
-      //UV
-      data[index + 17] = uvs[6]; //frame.x / tw;
-      data[index + 18] = uvs[7]; //(frame.y + frame.height) / th;
-      //Colour
-      data[index + 19] = sprite.worldAlpha;
     }
   }]);
 }();
@@ -2570,7 +2517,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52583" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60935" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
