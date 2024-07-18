@@ -2,8 +2,8 @@
 // TODO: test stencil and depth
 // TODO: destroy
 // TODO: blit on resize?
-import { Renderer } from "./Renderer.js";
-import { Texture } from "./Texture.js";
+import { Renderer } from "./Renderer";
+import { Texture } from "./Texture";
 
 export class RenderTarget {
     renderer: Renderer;

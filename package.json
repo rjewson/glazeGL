@@ -4,23 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc -watch -p tsconfig-dev.json",
-    "build": "snowpack build",
-    "devts": "tsc -w",
-    "watch": "browser-sync start -s 'test' -f 'test'"
-  },
-  "keywords": [],
+    "start": "parcel index.html",
+    "build": "parcel build index.html"  },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "browser-sync": "^2.26.14",
-    "install": "^0.13.0",
-    "npm": "^7.8.0",
-    "snowpack": "^3.2.0-pre.3",
-    "@snowpack/plugin-typescript": "^1.2.1",
-    "typescript": "^4.2.3"
-  },
   "dependencies": {
-    "src": "^1.1.2"
+    "parcel-bundler": "^1.12.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  },
+  "resolutions": {
+    "@babel/preset-env": "7.13.8"
   }
 }

@@ -146,7 +146,7 @@ export class Vector2 {
         return dX * dX + dY * dY;
     }
 
-    roundDown(closest): Vector2 {
+    roundDown(closest: number): Vector2 {
         this.x = Math.floor(this.x / closest) * closest;
         this.y = Math.floor(this.y / closest) * closest;
         return this;

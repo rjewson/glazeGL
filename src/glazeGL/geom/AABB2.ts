@@ -1,6 +1,6 @@
-import { AABB } from "./AABB.js";
-import { Vector2 } from "./Vector2.js";
-import { MAXINT, MININT } from "./Maths.js";
+import { AABB } from "./AABB";
+import { MAXINT, MININT } from "./Maths";
+import { Vector2 } from "./Vector2";
 
 export class AABB2 {
     public l: number = MAXINT;

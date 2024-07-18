@@ -1,6 +1,6 @@
-import { Geometry } from "./Geometry.js";
-import { Program } from "./Program.js";
-import { Renderer } from "./Renderer.js";
+import { Geometry } from "./Geometry";
+import { Program } from "./Program";
+import { Renderer } from "./Renderer";
 
 let ID = 0;
 

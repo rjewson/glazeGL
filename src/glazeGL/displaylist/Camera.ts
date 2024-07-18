@@ -1,6 +1,6 @@
-import { DisplayObjectContainer } from "./DisplayObjectContainer.js";
-import { Vector2 } from "../geom/Vector2.js";
-import { AABB2 } from "../geom/AABB2.js";
+import { AABB2 } from "../geom/AABB2";
+import { Vector2 } from "../geom/Vector2";
+import { DisplayObjectContainer } from "./DisplayObjectContainer";
 
 const CAMERA_TRACKING_SPEED = 0.1;
 export class Camera extends DisplayObjectContainer {

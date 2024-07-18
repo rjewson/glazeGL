@@ -1,4 +1,4 @@
-import { Vector2 } from "./Vector2.js";
+import { Vector2 } from "./Vector2";
 
 export const ZERO_TOLERANCE = 1e-8;
 

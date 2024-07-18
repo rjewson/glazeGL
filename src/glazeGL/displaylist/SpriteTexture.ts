@@ -1,6 +1,6 @@
-import { Rectangle } from "../geom/Rectangle.js";
-import { Vector2 } from "../geom/Vector2.js";
-import { Texture } from "../core/Texture.js";
+import { Texture } from "../core/Texture";
+import { Rectangle } from "../geom/Rectangle";
+import { Vector2 } from "../geom/Vector2";
 
 export class SpriteTexture {
     public baseTexture: Texture;

@@ -1,6 +1,6 @@
-import { Vector2 } from "../geom/Vector2.js";
-import { CreateMat3 } from "../geom/Matrix3.js";
-import { NewSprite } from "../index.js";
+import { CreateMat3 } from "../geom/Matrix3";
+import { Vector2 } from "../geom/Vector2";
+import { Sprite } from "./Sprite";
 
 export class Transform2D {
     public id: string;
@@ -18,7 +18,7 @@ export class Transform2D {
     public worldTransform: Float32Array;
     public worldAlpha: number;
 
-    public sprite: NewSprite;
+    public sprite: Sprite;
 
     private _rotation: number;
     private _rotationComponents: Vector2;

@@ -2,7 +2,7 @@
 // TODO: upload identity matrix if null ?
 // TODO: sampler Cube
 
-import { BlendEquation, BlendFunc, Renderer } from "./Renderer.js";
+import { BlendEquation, BlendFunc, Renderer } from "./Renderer";
 
 let ID = 1;
 

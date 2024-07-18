@@ -174,6 +174,7 @@ export class Renderer {
         if (srcAlpha !== undefined) {
             this.gl.blendFuncSeparate(src, dst, srcAlpha, dstAlpha);
         } else {
+            debugger;
             this.gl.blendFunc(src, dst);
         }
     }

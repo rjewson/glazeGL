@@ -30,7 +30,8 @@
             });
             const camera = new Camera();
             camera.resize(1000, 1000);
-            const stage = new Stage();
+            // const stage = new Stage();
+            const stage = new RenderNode();
             const spriteTexture = new SpriteTexture(texture, new Rectangle(0, 0, 2, 2));
 
             const count = 100;
@@ -38,7 +39,8 @@
             const sprites = [];
             for (var x = 0; x < count; x++) {
                 for (var y = 0; y < count; y++) {
-                    const sprite = new Sprite();
+                    // const sprite = new Sprite();
+                    const sprite = new RenderNode();
                     sprite.texture = spriteTexture;
                     sprite.position.x = 5 + (x * 10);
                     sprite.position.y = 5 + (y * 10);

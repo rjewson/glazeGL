@@ -1,8 +1,9 @@
-import { DisplayObjectContainer } from "./DisplayObjectContainer.js";
-import { Vector2 } from "../geom/Vector2.js";
-import { SpriteTexture } from "./SpriteTexture.js";
+import { Vector2 } from "../geom/Vector2";
+import { DisplayObjectContainer } from "./DisplayObjectContainer";
+import { SpriteTexture } from "./SpriteTexture";
 
 export class Sprite extends DisplayObjectContainer {
+
     public anchor: Vector2;
     public texture: SpriteTexture;
     public blendEquation: number;
@@ -39,7 +40,7 @@ export class Sprite extends DisplayObjectContainer {
         const d = this.worldTransform[4];
         const tx = this.worldTransform[2];
         const ty = this.worldTransform[5];
-/*
+//
         this.transformedVerts[0] = a * w1 + c * h1 + tx;
         this.transformedVerts[1] = d * h1 + b * w1 + ty;
 
@@ -51,7 +52,7 @@ export class Sprite extends DisplayObjectContainer {
 
         this.transformedVerts[6] = a * w1 + c * h0 + tx;
         this.transformedVerts[7] = d * h0 + b * w1 + ty;
-*/
+//
         const uvs = this.texture.uvs;
         data[index + 0] = a * w1 + c * h1 + tx;
         data[index + 1] = d * h1 + b * w1 + ty;

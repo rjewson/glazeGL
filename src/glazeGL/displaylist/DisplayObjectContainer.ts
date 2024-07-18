@@ -1,4 +1,4 @@
-import { DisplayObject } from "./DisplayObject.js";
+import { DisplayObject } from "./DIsplayObject";
 
 export class DisplayObjectContainer extends DisplayObject {
     public head: DisplayObject;

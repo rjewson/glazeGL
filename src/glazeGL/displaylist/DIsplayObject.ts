@@ -1,10 +1,11 @@
-import { Vector2 } from "../geom/Vector2.js";
-import { CreateMat3 } from "../geom/Matrix3.js";
-import { DisplayObjectContainer } from "./DisplayObjectContainer.js";
+import { CreateMat3 } from "../geom/Matrix3";
+import { Vector2 } from "../geom/Vector2";
+import { DisplayObjectContainer } from "./DisplayObjectContainer";
 
 export class DisplayObject {
 
     public id: string;
+
     public position: Vector2;
     public scale: Vector2;
     public pivot: Vector2;
@@ -14,7 +15,6 @@ export class DisplayObject {
     
     public alpha: number;
     public worldAlpha: number;
-    
     
     public worldTransform: Float32Array;
     public localTransform: Float32Array;

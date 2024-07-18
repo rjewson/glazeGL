@@ -7,7 +7,7 @@ import { Renderer } from "./Renderer.js";
 
 const emptyPixel = new Uint8Array(4);
 
-function isPowerOf2(value) {
+function isPowerOf2(value: number) {
     return (value & (value - 1)) === 0;
 }
 

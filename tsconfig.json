@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "strictNullChecks": false,
+      "noImplicitAny": false,
+      "strict": true,
+      "module": "commonjs",
+      "jsx": "preserve",
+      "esModuleInterop": true,
+      "sourceMap": true,
+      "allowJs": true,
+      "target": "ES6",
+      "lib": [
+        "es6",
+        "dom"
+      ],
+      "rootDir": "src",
+      "moduleResolution": "node"
+    }
+  }

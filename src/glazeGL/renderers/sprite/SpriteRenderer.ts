@@ -1,11 +1,11 @@
-import { Buffer } from "../../core/Buffer.js";
-import { Geometry } from "../../core/Geometry.js";
-import { Program } from "../../core/Program.js";
-import { Renderer } from "../../core/Renderer.js";
-import { Texture } from "../../core/Texture.js";
-import { DisplayObjectContainer } from "../../displaylist/DisplayObjectContainer.js";
-import { Sprite } from "../../displaylist/Sprite.js";
-import { Stage } from "../../displaylist/Stage.js";
+import { Buffer } from "../../core/Buffer";
+import { Geometry } from "../../core/Geometry";
+import { Program } from "../../core/Program";
+import { Renderer } from "../../core/Renderer";
+import { Texture } from "../../core/Texture";
+import { DisplayObjectContainer } from "../../displaylist/DisplayObjectContainer";
+import { Sprite } from "../../displaylist/Sprite";
+import { Stage } from "../../displaylist/Stage";
 
 const BUFFER_SIZE = 1000;
 const BYTES_PER_QUAD = 5 * 4;

@@ -1,5 +1,5 @@
-import { Vector2 } from "./Vector2.js";
-import { AABB2 } from "./AABB2.js";
+import { AABB2 } from "./AABB2";
+import { Vector2 } from "./Vector2";
 
 export class AABB {
     public position: Vector2 = new Vector2();

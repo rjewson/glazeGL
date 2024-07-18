@@ -1,6 +1,3 @@
-import { Buffer } from "./Buffer.js";
-import { Program } from "./Program.js";
-import { Renderer } from "./Renderer.js";
 
 // attribute params
 // {
@@ -16,6 +13,10 @@ import { Renderer } from "./Renderer.js";
 //     min - array - for when passing in buffer
 //     max - array - for when passing in buffer
 // }
+
+import { Buffer } from "./Buffer";
+import { Program } from "./Program";
+import { Renderer } from "./Renderer";
 
 // TODO: fit in transform feedback
 // TODO: when would I disableVertexAttribArray ?
